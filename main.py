@@ -24,9 +24,13 @@ class MainPage(webapp2.RequestHandler):
         template = env.get_template('templates/home.html')
         self.response.write(template.render(templateVars))
 
-
+class Profile(webapp2.RequestHandler):
+    def get(self):
+        template = env.get_template("templates/profile.html")
+        self.response.write(template.render())
 
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
+    ("/profile", Profile)
 ], debug=True)
