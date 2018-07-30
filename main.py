@@ -40,11 +40,18 @@ class Profile(webapp2.RequestHandler):
         self.response.write(template.render())
 
 
-
+class Profile(webapp2.RequestHandler):
+    def get(self):
+        template = env.get_template("templates/profile.html")
+        self.response.write(template.render())
 
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
+<<<<<<< HEAD
     ('/create', CreateProfile),
     ('/profile', Profile),
+=======
+    ("/profile", Profile)
+>>>>>>> f3ef24155b50f8ea1cbd80e9512e684569971881
 ], debug=True)
