@@ -32,5 +32,6 @@ class Profile(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
-    ("/profile", Profile)
+    ('/create', CreateProfile),
+    ('/profile', Profile)
 ], debug=True)
