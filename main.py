@@ -42,12 +42,6 @@ class Profile(webapp2.RequestHandler):
         self.response.write(template.render())
 
 
-class Login(webapp2.RequestHandler):
-    def get(self):
-        template = env.get_template("templates/login.html")
-        self.response.write(template.render())
-
-
 class ResumeReview(webapp2.RequestHandler):
     def get(self):
         template = env.get_template("templates/resume_upload.html")
@@ -62,8 +56,7 @@ class ResumeUpload(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
-    ('/create', CreateProfile),
-    ('/login', Login),
+    ('/createAccount', CreateProfile),
     ('/profile', Profile),
     ('/resume_review', ResumeReview),
     ('/upload_resume', ResumeUpload)
