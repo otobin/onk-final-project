@@ -44,6 +44,7 @@ class CreateProfile(webapp2.RequestHandler):
     def get(self):
         template = env.get_template('templates/create_profile.html')
         self.response.write(template.render())
+
     def post(self):
         email = users.get_current_user().email()
         name = self.request.get('name')
@@ -86,6 +87,7 @@ class ResumeHandler(webapp2.RequestHandler):
         profile = key.get()
         self.response.headers['Content-Type'] = 'application/pdf'
         self.response.write(profile.resume)
+        # use I frame to display separate window within webpage
 
 
 app = webapp2.WSGIApplication([
