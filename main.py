@@ -55,9 +55,9 @@ class ResumeReview(webapp2.RequestHandler):
 
 class ResumeUpload(webapp2.RequestHandler):
     def post(self):
-        resume = self.request.get('key')
-        key = ndb.Key(urlsafe=urlsafe_key)
-        person = key.get()
+        resume = self.request.get('resume')
+        current_user = users.get_current_user()
+        current_person = Person.query().filter(Person.email == current_user.email()).get()
 
 
 app = webapp2.WSGIApplication([
