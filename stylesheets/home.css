@@ -23,11 +23,24 @@ body{
   font-size:50px;
 }
 
-#links{
+.links{
   padding: 10px;
   border: 1px solid black;
 }
 
+#homelink {
+
+}
+
+#profilelink {
+  display: block;
+  position: relative;
+  left: 1340px;
+}
+
+#createlink {
+
+}
 
 a{
   text-decoration: none;
