@@ -8,6 +8,10 @@ handlers:
 - url: /.*
   script: main.app
   secure: always
+<<<<<<< HEAD
+=======
+
+>>>>>>> d3424229c8028ebad89e46369e0beb57130c1135
 
 libraries:
 - name: webapp2
