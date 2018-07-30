@@ -63,11 +63,7 @@ class ResumeUpload(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/create', CreateProfile),
-<<<<<<< HEAD
-    ('/profile', Profile)
-=======
     ('/profile', Profile),
     ('/resume_review', ResumeReview),
     ('/upload_resume', ResumeUpload)
->>>>>>> d3424229c8028ebad89e46369e0beb57130c1135
 ], debug=True)
