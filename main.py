@@ -14,6 +14,9 @@ env = jinja2.Environment(
 
 class Profile(ndb.Model):
     name = ndb.StringProperty()
+    education = ndb.StringProperty()
+    work_experience = ndb.StringProperty()
+    current_industry = ndb.StringProperty()
     email = ndb.StringProperty()
     resume = ndb.BlobProperty()
 
