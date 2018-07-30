@@ -15,6 +15,7 @@ env = jinja2.Environment(
 class Profile(ndb.Model):
     name = ndb.StringProperty()
     email = ndb.StringProperty()
+    resume = ndb.BlobProperty()
 
 
 class MainPage(webapp2.RequestHandler):
@@ -36,12 +37,29 @@ class CreateProfile(webapp2.RequestHandler):
     def post(self):
         self.redirect('/')
 
-class Profile(webapp2.RequestHandler):
+class Display_Profile(webapp2.RequestHandler):
     def get(self):
+        urlsafe_key = self.request.get('key')
+        current_user = users.get_current_user()
+        key = ndb.Key(urlsafe=urlsafe_key)
+        profile=key.get()
+
+        templateVars = {
+            'profile' : profile,
+        }
         template = env.get_template('templates/profile.html')
+        self.response.write(template.render(templateVars))
+
+
+<<<<<<< HEAD
+=======
+class Login(webapp2.RequestHandler):
+    def get(self):
+        template = env.get_template("templates/create_profile.html")
         self.response.write(template.render())
 
 
+>>>>>>> 30bec1bfe8897bbb21c23cc87d1688f13863b88d
 class ResumeReview(webapp2.RequestHandler):
     def get(self):
         template = env.get_template("templates/resume_upload.html")
@@ -49,15 +67,33 @@ class ResumeReview(webapp2.RequestHandler):
 
 class ResumeUpload(webapp2.RequestHandler):
     def post(self):
-        resume = self.request.get('key')
+        resume = self.request.get('resume')
+        current_user = users.get_current_user()
+        current_profile = Profile.query().filter(Profile.email == current_user.email()).get()
+        current_profile.resume = resume
+        current_profile.put()
+        self.redirect('/resume?key=' + current_profile.key.urlsafe())
+
+class ResumeHandler(webapp2.RequestHandler):
+    def get(self):
+        urlsafe_key = resume = self.request.get('key')
         key = ndb.Key(urlsafe=urlsafe_key)
-        person = key.get()
+        profile = key.get()
+        self.response.headers['Content-Type'] = 'application/pdf'
+        self.response.write(profile.resume)
 
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
+<<<<<<< HEAD
     ('/createAccount', CreateProfile),
     ('/profile', Profile),
+=======
+    ('/create', CreateProfile),
+    ('/login', Login),
+    ('/profile', Display_Profile),
+>>>>>>> 30bec1bfe8897bbb21c23cc87d1688f13863b88d
     ('/resume_review', ResumeReview),
-    ('/upload_resume', ResumeUpload)
+    ('/upload_resume', ResumeUpload),
+    ('/resume', ResumeHandler),
 ], debug=True)
