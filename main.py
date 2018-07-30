@@ -1,7 +1,7 @@
 import webapp2
 import jinja2
 import os
-
+import logging
 
 from google.appengine.ext import ndb
 from google.appengine.api import users
@@ -19,12 +19,14 @@ class Profile(ndb.Model):
 
 class MainPage(webapp2.RequestHandler):
     def get(self):
-        #1. Read request
-        #2. Read/write to database
-        #3. Render response
+        logging.info('This is the main handler')
+        login_url = users.create_login_url('/create')
 
+        templateVars = {
+            'login_url': login_url,
+        }
         template = env.get_template('templates/home.html')
-        self.response.write(template.render())
+        self.response.write(template.render(templateVars))
 
 class CreateProfile(webapp2.RequestHandler):
     def get(self):
@@ -49,9 +51,5 @@ class Profile(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/create', CreateProfile),
-<<<<<<< HEAD
-    ('/profile', Profile)
-=======
     ('/profile', Profile),
->>>>>>> a58ed9eed0bd2eb3c6f46ba74e0734683ab08fb4
 ], debug=True)
