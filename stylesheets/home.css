@@ -1,7 +1,7 @@
 body{
   font-family: sans-serif;
   margin: 0;
-  background-color:#B1A296
+  background-color:#B1A296;
 }
 
 #header{
@@ -32,14 +32,15 @@ body{
 
 }
 
-#profilelink {
-  display: block;
+#createAccount {
   position: relative;
-  left: 1340px;
+  left: 1300px;
 }
 
-#createlink {
-
+.MainPage{
+  padding: 100px;
+  margin: 10px;
+  border: 1px solid black;
 }
 
 a{
