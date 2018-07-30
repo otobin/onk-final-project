@@ -46,8 +46,22 @@ class Profile(webapp2.RequestHandler):
         self.response.write(template.render())
 
 
+class ResumeReview(webapp2.RequestHandler):
+    def get(self):
+        template = env.get_template("templates/resume_upload.html")
+        self.response.write(template.render())
+
+class ResumeUpload(webapp2.RequestHandler):
+    def post(self):
+        resume = self.request.get('key')
+        key = ndb.Key(urlsafe=urlsafe_key)
+        person = key.get()
+
+
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/create', CreateProfile),
-    ('/profile', Profile)
+    ('/profile', Profile),
+    ('/resume_review', ResumeReview),
+    ('/upload_resume', ResumeUpload)
 ], debug=True)
