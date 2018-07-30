@@ -6,6 +6,8 @@ handlers:
 - url: /.*
   script: main.app
   secure: always
+- url: /stylesheets
+  static_dir: stylesheets
 
 libraries:
 - name: webapp2
