@@ -1,0 +1,76 @@
+body{
+  font-family: sans-serif;
+  margin: 0;
+  background-color:#7395AE;
+}
+
+h2 {
+  display:flex;
+  text-align: center;
+  color: white;
+  font-size: 50px;
+}
+
+
+#education {
+  display:flex;
+  flex: 4 4 auto;
+  flex-direction: row;
+  text-align: center;
+  font-size: 30px;
+  border: 1px solid black;
+  padding: 20px;
+  margin: 10px;
+  color: white;
+
+}
+
+
+
+#work {
+  display:flex;
+  flex: 4 4 auto;
+  flex-direction: row;
+  text-align: center;
+  font-size: 30px;
+  border: 1px solid black;
+  padding: 20px;
+  margin: 10px;
+  color: white;
+}
+
+#industry {
+  display:flex;
+  flex: 4 4 auto;
+  flex-direction: row;
+  text-align: center;
+  font-size: 30px;
+  border: 1px solid black;
+  padding: 20px;
+  margin: 10px;
+  color: white;
+}
+
+#resume {
+  display:flex;
+  flex: 4 4 auto;
+  flex-direction: row;
+  text-align: center;
+  font-size: 30px;
+  border: 1px solid black;
+  padding: 20px;
+  margin: 10px;
+  color: white;
+}
+
+#create {
+  display:flex;
+  flex: 4 4 auto;
+  flex-direction: row;
+  text-align: center;
+  font-size: 30px;
+  border: 1px solid black;
+  padding: 20px;
+  margin: 10px;
+  color: white;
+}
