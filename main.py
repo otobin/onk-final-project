@@ -49,9 +49,5 @@ class Profile(webapp2.RequestHandler):
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/create', CreateProfile),
-<<<<<<< HEAD
     ('/profile', Profile)
-=======
-    ('/profile', Profile),
->>>>>>> a58ed9eed0bd2eb3c6f46ba74e0734683ab08fb4
 ], debug=True)
