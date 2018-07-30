@@ -29,7 +29,7 @@ body{
 }
 
 #homelink {
-
+  position: relative;
 }
 
 #createAccount {
@@ -37,6 +37,10 @@ body{
   left: 1300px;
 }
 
+#profilelink{
+  position: relative;
+  
+}
 .MainPage{
   padding: 100px;
   margin: 10px;

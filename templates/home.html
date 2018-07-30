@@ -8,10 +8,17 @@
 
     <div class=links>
       {% if current_user %}
+<<<<<<< HEAD
       Welcome, {{current_user}}
       <a href='{{logout_url}}'>Log out here</a>
+      <
+=======
+      Welcome, {{current_person.name}}
+      <a href='{{logout_url}}'>Log out here</a><br>
+>>>>>>> ebcc552c19c534875f63bae219600444aacc0c6e
       {% else %}
       <a href='{{login_url}}'>Log in here</a>
+      <a href='{{create_account}}'>Sign Up!</a>
       {% endif %}
     </div>
   </div>
