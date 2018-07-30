@@ -51,12 +51,6 @@ class Display_Profile(webapp2.RequestHandler):
         self.response.write(template.render(templateVars))
 
 
-class Login(webapp2.RequestHandler):
-    def get(self):
-        template = env.get_template("templates/create_profile.html")
-        self.response.write(template.render())
-
-
 class ResumeReview(webapp2.RequestHandler):
     def get(self):
         template = env.get_template("templates/resume_upload.html")
