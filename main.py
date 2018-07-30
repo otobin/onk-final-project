@@ -21,20 +21,34 @@ class Profile(ndb.Model):
 class MainPage(webapp2.RequestHandler):
     def get(self):
         logging.info('This is the main handler')
-        login_url = users.create_login_url('/create')
+        login_url = ''
+        logout_url = ''
+        current_user = users.get_current_user()
+        if not current_user:
+            login_url = users.create_login_url('/create')
+        else:
+            logout_url = users.create_logout_url('/')
 
+        profile = Profile.query().get()
         templateVars = {
             'login_url': login_url,
+            'profile': profile,
+            'current_user': current_user,
+            'logout_url': logout_url
         }
         template = env.get_template('templates/home.html')
         self.response.write(template.render(templateVars))
+
 
 class CreateProfile(webapp2.RequestHandler):
     def get(self):
         template = env.get_template('templates/create_profile.html')
         self.response.write(template.render())
-
     def post(self):
+        email = users.get_current_user().email()
+        name = self.request.get('name')
+        profile = Profile(email=email, name=name)
+        profile.put()
         self.redirect('/')
 
 class Display_Profile(webapp2.RequestHandler):
