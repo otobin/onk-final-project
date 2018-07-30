@@ -14,6 +14,9 @@ env = jinja2.Environment(
 
 class Profile(ndb.Model):
     name = ndb.StringProperty()
+    education = ndb.StringProperty()
+    work_experience = ndb.StringProperty()
+    current_industry = ndb.StringProperty()
     email = ndb.StringProperty()
     resume = ndb.BlobProperty()
 
@@ -24,17 +27,23 @@ class MainPage(webapp2.RequestHandler):
         login_url = ''
         logout_url = ''
         current_user = users.get_current_user()
+        person = Profile.query().fetch()
+        current_person = ''
         if not current_user:
-            login_url = users.create_login_url('/create')
+            login_url = users.create_login_url('/')
+            create_account = users.create_login_url('/create')
         else:
             logout_url = users.create_logout_url('/')
+            current_email = current_user.emil()
+            current_person = Profile.query().filter(Profile.email == current_email).get()
 
         profile = Profile.query().get()
         templateVars = {
             'login_url': login_url,
             'profile': profile,
             'current_user': current_user,
-            'logout_url': logout_url
+            'logout_url': logout_url,
+            'current_person': current_person
         }
         template = env.get_template('templates/home.html')
         self.response.write(template.render(templateVars))
