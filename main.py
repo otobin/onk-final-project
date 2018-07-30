@@ -50,5 +50,4 @@ app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/create', CreateProfile),
     ('/profile', Profile)
->>>>>>> 098b7cf7d6b04158f465d9be2ddae327992725b1
 ], debug=True)
