@@ -76,8 +76,7 @@ class ResumeHandler(webapp2.RequestHandler):
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
-    ('/create', CreateProfile),
-    ('/login', Login),
+    ('/createAccount', CreateProfile),
     ('/profile', Display_Profile),
     ('/resume_review', ResumeReview),
     ('/upload_resume', ResumeUpload),
