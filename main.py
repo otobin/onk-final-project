@@ -57,6 +57,7 @@ class MainPage(webapp2.RequestHandler):
                 template = env.get_template('templates/home.html')
                 self.response.write(template.render(templateVars))
             else:
+                print("hello")
                 self.redirect('/fail')
 
 
