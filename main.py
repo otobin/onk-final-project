@@ -26,19 +26,16 @@ class MainPage(webapp2.RequestHandler):
     def get(self):
         logging.info('This is the main handler')
         #This part of the code is to direc the user to either login, logout, or create account
-        login_url = ''
-        logout_url = ''
-        create_account = ''
+        login_url = users.create_login_url('/')
+        logout_url = users.create_logout_url('/')
+        create_account = users.create_login_url('/create')
         current_person = ''
         current_user = users.get_current_user()
         if not current_user:
-            login_url = users.create_login_url('/')
-            create_account = users.create_login_url('/create')
+            current_user = None
         else:
-            logout_url = users.create_logout_url('/')
             current_email = current_user.email()
             #pinpoints the right account for the person who just logged in
-
             current_person = Profile.query().filter(Profile.email == current_email).get()
 
         templateVars = {
@@ -66,21 +63,19 @@ class CreateProfile(webapp2.RequestHandler):
         industry = self.request.get('industry')
         profile = Profile(email=email, first_name=first_name, last_name=last_name, education=education,
         experience=experience, industry=industry)
-
         profile.put()
         self.redirect('/')
 
 class Display_Profile(webapp2.RequestHandler):
     def get(self):
         urlsafe_key = self.request.get('key')
-        current_user = users.get_current_user()
         key = ndb.Key(urlsafe=urlsafe_key)
         profile=key.get()
-
+        logging.info(profile)
         templateVars = {
             'profile' : profile,
         }
-        template = env.get_template('templates/profile.html')
+        template = env.get_template('/templates/profile.html')
         self.response.write(template.render(templateVars))
 
 
