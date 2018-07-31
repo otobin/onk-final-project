@@ -1,48 +1,5 @@
 body{
-  font-family: sans-serif;
+  font-family: 'Lato', sans-serif;
   margin: 0;
   background-color:#B1A296;
-}
-
-#header{
-  display:flex;
-  flex-direction: row;
-}
-
-
-#headinfo{
-  flex: 4 4 auto;
-  display:flex;
-  flex-direction: column;
-  padding: 10px;
-  background-color: #7395AE;
-  color: white;
-}
-
-#name{
-  font-size:50px;
-}
-
-.links{
-  padding: 10px;
-  border: 1px solid black;
-}
-
-#homelink {
-
-}
-
-#createAccount {
-  position: relative;
-  left: 1300px;
-}
-
-.MainPage{
-  padding: 100px;
-  margin: 10px;
-  border: 1px solid black;
-}
-
-a{
-  text-decoration: none;
 }

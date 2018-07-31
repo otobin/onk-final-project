@@ -13,10 +13,11 @@ env = jinja2.Environment(
 
 
 class Profile(ndb.Model):
-    name = ndb.StringProperty()
+    first_name = ndb.StringProperty()
+    last_name = ndb.StringProperty()
     education = ndb.StringProperty()
-    work_experience = ndb.StringProperty()
-    current_industry = ndb.StringProperty()
+    experience = ndb.StringProperty()
+    industry = ndb.StringProperty()
     email = ndb.StringProperty()
     resume = ndb.BlobProperty()
 
@@ -24,26 +25,27 @@ class Profile(ndb.Model):
 class MainPage(webapp2.RequestHandler):
     def get(self):
         logging.info('This is the main handler')
+        #This part of the code is to direc the user to either login, logout, or create account
         login_url = ''
         logout_url = ''
-        current_user = users.get_current_user()
-        person = Profile.query().fetch()
+        create_account = ''
         current_person = ''
+        current_user = users.get_current_user()
         if not current_user:
             login_url = users.create_login_url('/')
             create_account = users.create_login_url('/create')
         else:
             logout_url = users.create_logout_url('/')
-            current_email = current_user.emil()
+            current_email = current_user.email()
+            #pinpoints the right account for the person who just logged in
             current_person = Profile.query().filter(Profile.email == current_email).get()
 
-        profile = Profile.query().get()
         templateVars = {
             'login_url': login_url,
-            'profile': profile,
             'current_user': current_user,
             'logout_url': logout_url,
-            'current_person': current_person
+            'create_account': create_account,
+            'current_person': current_person,
         }
         template = env.get_template('templates/home.html')
         self.response.write(template.render(templateVars))
@@ -53,10 +55,16 @@ class CreateProfile(webapp2.RequestHandler):
     def get(self):
         template = env.get_template('templates/create_profile.html')
         self.response.write(template.render())
+
     def post(self):
         email = users.get_current_user().email()
-        name = self.request.get('name')
-        profile = Profile(email=email, name=name)
+        first_name = self.request.get('first_name')
+        last_name = self.request.get('last_name')
+        education = self.request.get('education')
+        experience = self.request.get('experience')
+        industry = self.request.get('industry')
+        profile = Profile(email=email, first_name=first_name, last_name=last_name, education=education,
+        experience=experience, industry=industry)
         profile.put()
         self.redirect('/')
 
