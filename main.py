@@ -1,6 +1,7 @@
 import webapp2
 import jinja2
 import os
+import StringIO
 import logging
 
 from google.appengine.ext import ndb
@@ -19,7 +20,12 @@ class Profile(ndb.Model):
     experience = ndb.StringProperty()
     industry = ndb.StringProperty()
     email = ndb.StringProperty()
+    #suggested_jobs = ndb.ListProperty()
     resume = ndb.BlobProperty()
+
+dead_words = ['is', 'are,' 'was,' 'were,' 'am,' 'has,' 'have,' 'had,' 'be,' 'been,' 'look,' 'take,' 'took,' 'make,' 'run,' 'ran,' 'go,' 'went,' 'gone,' 'do,' 'did,' 'came,' 'come', 'helped']
+
+action_words = ['Achieved', 'improved', 'trained', 'maintained', 'mentored', 'managed', 'created', 'resolved', 'volunteered', 'influence', 'increased', 'decreased', 'ideas', 'launched', 'revenue', 'profits', 'under budget', 'won']
 
 
 class MainPage(webapp2.RequestHandler):
@@ -33,15 +39,6 @@ class MainPage(webapp2.RequestHandler):
         current_user = users.get_current_user()
         if not current_user:
             current_user = None
-            templateVars = {
-                'login_url': login_url,
-                'current_user': current_user,
-                'logout_url': logout_url,
-                'create_account': create_account,
-                'current_person': current_person,
-            }
-            template = env.get_template('templates/home.html')
-            self.response.write(template.render(templateVars))
         else:
             current_email = current_user.email()
             #pinpoints the right account for the person who just logged in
@@ -60,7 +57,6 @@ class MainPage(webapp2.RequestHandler):
                 self.redirect('/fail')
 
 
-
 class CreateProfile(webapp2.RequestHandler):
     def get(self):
         template = env.get_template('templates/create_profile.html')
@@ -73,10 +69,11 @@ class CreateProfile(webapp2.RequestHandler):
         education = self.request.get('education')
         experience = self.request.get('experience')
         industry = self.request.get('industry')
+        resume = self.request.get('resume')
         profile = Profile(email=email, first_name=first_name, last_name=last_name, education=education,
-        experience=experience, industry=industry)
-        profile.put()
-        self.redirect('/')
+        experience=experience, industry=industry, resume = resume)
+        key = profile.put().urlsafe()
+        self.redirect('/profile?key=' + key)
 
 class Display_Profile(webapp2.RequestHandler):
     def get(self):
@@ -89,15 +86,16 @@ class Display_Profile(webapp2.RequestHandler):
         }
         template = env.get_template('/templates/profile.html')
         self.response.write(template.render(templateVars))
-    def post(self):
-        self.redirect("/create")
+    def post(self): #To do: if else to override or create new profile
+        self.redirect("/update")
 
-
-
-class ResumeReview(webapp2.RequestHandler):
+class Update(webapp2.RequestHandler):
     def get(self):
-        template = env.get_template("templates/resume_upload.html")
-        self.response.write(template.render())
+        template = env.get_template("/templates/update_profile.html")
+        self.response.write(template)
+    def post(self):
+
+
 
 class ResumeUpload(webapp2.RequestHandler):
     def post(self):
@@ -119,16 +117,75 @@ class ResumeHandler(webapp2.RequestHandler):
 
 class Login_Fail(webapp2.RequestHandler):
     def get(self):
+        logout_url = users.create_logout_url('/')
+        templateVar = {
+            'logout_url': logout_url
+        }
         template = env.get_template('/templates/login_fail.html')
-        self.response.write(template.render())
+        self.response.write(template.render(templateVar))
+
+class printAdvice(webapp2.RequestHandler):
+    def get(self):
+        dead_match = find_dead_words()
+        action_match = find_action_words()
+
+        templateVars = {
+            'dead_match' : dead_match,
+            'action_match' : action_match
+        }
+        template = env.get_template('templates/resume_advice')
+        self.response.write(template.render(templateVars))
+
+def parse_resume():
+    current_user = users.get_current_user()
+    current_profile = Profile.query().get()
+    resume = current_profile.resume
+
+    content = ' '.join(resume)#.replace('\n','').replace('\r','').lower()
+
+    print content
+    words = {}
+    wordArray = content.split(" ")
+
+    print wordArray
+    for word in wordArray:
+        if (word in words and word is not ''):
+            words[word] += 1
+        else:
+            words[word] = 1
+
+    return words
+
+def find_action_words():
+    action_match = {}
+    words = parse_resume()
+    for word in words:
+        for action_word in action_words:
+            if word == action_word and word not in match:
+                action_match[word] = 1
+            elif word == action_word:
+                action_match[word] += 1
+    return action_match
+
+def find_dead_words():
+    dead_match = {}
+    words = parse_resume()
+    for word in words:
+        for dead_word in dead_words:
+            if word == dead_word and word not in match:
+                dead_match[word] = 1
+            elif word == dead_word:
+                dead_match[word] += 1
+    return dead_match
 
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/create', CreateProfile),
     ('/profile', Display_Profile),
-    ('/resume_review', ResumeReview),
     ('/upload_resume', ResumeUpload),
     ('/resume', ResumeHandler),
+    ('/advice', printAdvice),
     ('/fail', Login_Fail),
+    ('update', Update)
 ], debug=True)
