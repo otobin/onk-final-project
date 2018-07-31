@@ -3,14 +3,22 @@
 
 <link rel="stylesheet" href="/stylesheets/profile.css"/>
 
-Name: {{profile.first_name}}
-Email: {{profile.email}}
 
+<div id = "maininfo">
+  <h1>{{profile.first_name}}</h1>
+  <h2>{{profile.email}}</h2>
+</div>
 
-<embed src="/resume?key={{profile.key.urlsafe}}" width="800px" height="2100px" />
+<div id = "otherinfo">
+  <p>Experience: {{profile.experience}} </p>
+  <p>Education: {{profile.education}}</p>
+  <p>Looking for a job in the {{profile.industry}} industry </p>
+</div>
 
-<h1>{{profile.first_name}}</h1>
-<h2>{{profile.email}}</h2>
-{{profile.experience}}
-{{profile.education}}
-{{profile.industry}}
+<div id = "resume"
+  <embed src="/resume?key={{profile.key.urlsafe}}" width="800px" height="2100px" />
+</div>
+
+<form method = "post" action = "/create">
+  <button id = "update">Update Profile</button>
+</form>

@@ -19,6 +19,7 @@ class Profile(ndb.Model):
     experience = ndb.StringProperty()
     industry = ndb.StringProperty()
     email = ndb.StringProperty()
+    suggested_jobs = ndb.ListProperty()
     resume = ndb.BlobProperty()
 
 
@@ -37,6 +38,8 @@ class MainPage(webapp2.RequestHandler):
             current_email = current_user.email()
             #pinpoints the right account for the person who just logged in
             current_person = Profile.query().filter(Profile.email == current_email).get()
+            if not current_person:
+                self.redirect("/create")
 
         templateVars = {
             'login_url': login_url,
@@ -77,6 +80,9 @@ class Display_Profile(webapp2.RequestHandler):
         }
         template = env.get_template('/templates/profile.html')
         self.response.write(template.render(templateVars))
+    def post(self):
+        self.redirect("/create")
+
 
 
 class ResumeReview(webapp2.RequestHandler):
