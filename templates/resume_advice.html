@@ -1,0 +1,14 @@
+<h3>Action Words:</h3> <br>
+
+{% for word in action_words %}
+  You used {{word}} {{action_words[word]}} times
+{% endfor %}
+
+
+<br><br>
+
+<h3>Dead Words:</h3><br>
+
+{% for word in dead_words %}
+  You used {{word}} {{dead_words[word]}} times
+{% endfor %}
