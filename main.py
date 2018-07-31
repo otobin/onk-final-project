@@ -19,7 +19,6 @@ class Profile(ndb.Model):
     experience = ndb.StringProperty()
     industry = ndb.StringProperty()
     email = ndb.StringProperty()
-    suggested_jobs = ndb.ListProperty()
     resume = ndb.BlobProperty()
 
 
