@@ -28,8 +28,6 @@ dead_words = ['is', 'are,' 'was,' 'were,' 'am,' 'has,' 'have,' 'had,' 'be,' 'bee
 action_words = ['Achieved', 'improved', 'trained', 'maintained', 'mentored', 'managed', 'created', 'resolved', 'volunteered', 'influence', 'increased', 'decreased', 'ideas', 'launched', 'revenue', 'profits', 'under budget', 'won']
 
 
-
-
 class MainPage(webapp2.RequestHandler):
     def get(self):
         logging.info('This is the main handler')
@@ -110,12 +108,24 @@ class ResumeHandler(webapp2.RequestHandler):
         self.response.write(profile.resume)
         # use I frame to display separate window within webpage
 
+class printAdvice(webapp2.RequestHandler):
+    def get(self):
+        dead_match = find_dead_words()
+        action_match = find_action_words()
+
+        templateVars = {
+            'dead_match' : dead_match,
+            'action_match' : action_match
+        }
+        template = env.get_template('templates/resume_advice')
+        self.response.write(template.render(templateVars))
+
 def parse_resume():
     current_user = users.get_current_user()
     current_profile = Profile.query().filter(Profile.email == current_user.email()).get()
     resume = current_profile.resume
 
-    content = ' '.join(resume).replace('\n','').replace('\r','').lower()
+    content = ' '.join(resume)#.replace('\n','').replace('\r','').lower()
 
     words = {}
     wordArray = content.split(' ')
@@ -138,7 +148,7 @@ def find_action_words():
                 action_match[word] = 1
             elif word == dead_word:
                 action_match[word] += 1
-    return key_match
+    return action_match
 
 def find_dead_words():
     dead_match = {}
@@ -149,9 +159,9 @@ def find_dead_words():
                 dead_match[word] = 1
             elif word == dead_word:
                 dead_match[word] += 1
-    return key_match
+    return dead_match
 
-print find_key_words()
+print find_action_words()
 
 
 
@@ -161,4 +171,5 @@ app = webapp2.WSGIApplication([
     ('/profile', Display_Profile),
     ('/upload_resume', ResumeUpload),
     ('/resume', ResumeHandler),
+    ('/advice', printAdvice)
 ], debug=True)
