@@ -119,8 +119,12 @@ class ResumeHandler(webapp2.RequestHandler):
 
 class Login_Fail(webapp2.RequestHandler):
     def get(self):
+        logout_url = users.create_logout_url('/')
+        templateVar = {
+            'logout_url': logout_url
+        }
         template = env.get_template('/templates/login_fail.html')
-        self.response.write(template.render())
+        self.response.write(template.render(templateVar))
 
 
 app = webapp2.WSGIApplication([
