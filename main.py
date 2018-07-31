@@ -86,8 +86,14 @@ class Display_Profile(webapp2.RequestHandler):
         }
         template = env.get_template('/templates/profile.html')
         self.response.write(template.render(templateVars))
+    def post(self): #To do: if else to override or create new profile
+        self.redirect("/update")
+
+class Update(webapp2.RequestHandler):
+    def get(self):
+        template = env.get_template("/templates/update_profile.html")
+        self.response.write(template)
     def post(self):
-        self.redirect("/create")
 
 
 
@@ -181,4 +187,5 @@ app = webapp2.WSGIApplication([
     ('/resume', ResumeHandler),
     ('/advice', printAdvice),
     ('/fail', Login_Fail),
+    ('update', Update)
 ], debug=True)

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<title>UserInfo</title>
+<link rel="stylesheet" href="/stylesheets/create_profile.css"/>
+
+
+<h2>Update your Profile<h2>
+
+<form method="post" action="/create" enctype="multipart/form-data">
+  <div id = "information">
+    First name: <input type='text' name='first_name'><br>
+    Last name: <input type='test' name='last_name'><br>
+  </div>
+  <div id = "education">
+    <label>Education</label>
+    <select name = "education">
+      <option value = "elementary">Elementary School</option>
+      <option value = "middle">Middle School</option>
+      <option value = "high">High School</option>
+      <option value = "college">College</option>
+      <option value = "grad">Graduate School</option>
+    </select>
+  </div>
+  <div id = "work">
+    <label>Work Experience</label>
+    <select name = "experience">
+      <option value = "none">No Experience</option>
+      <option value = "unskilled">Unskilled Labor</option>
+      <option value = "entry">Entry Level</option>
+      <option value = "mid">Mid Level</option>
+      <option value = "professional">Professional</option>
+    </select>
+  </div>
+  <div id = "industry">
+    <label>Current Industry or Interest</label>
+    <select name = "industry">
+      <option value = "aerospace">Aerospace</option>
+      <option value = "agriculture">Agriculture</option>
+      <option value = "chemical">Chemical</option>
+      <option value = "computer">Computer</option>
+      <option value = "construction">Construction</option>
+      <option value = "defense">Defense</option>
+      <option value = "education">Education</option>
+      <option value = "energy">Energy</option>
+      <option value = "entertainment">Entertainment</option>
+      <option value = "financialServices">Financial Services</option>
+      <option value = "food">Food</option>
+      <option value = "healthcare">Health Care</option>
+      <option value = "hospitality">Hospitality</option>
+      <option value = "information">Information</option>
+      <option value = "manufacturing">Manufacturing</option>
+      <option value = "massMedia">Mass Media</option>
+      <option value = "Mining">Mining</option>
+      <option value = "telecommunications">Telecommunications</option>
+      <option value = "transport">Transport</option>
+      <option value = "water">Water</option>
+    </select>
+  </div>
+  <div id = "resume">
+    Upload your resume: <br><input name="resume" type="file"><br>
+  </div>
+  <div id = "create">
+    <input type = "submit" value = "Update your Profile">
+  </div>
+</form>
