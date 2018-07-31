@@ -35,26 +35,27 @@ class MainPage(webapp2.RequestHandler):
         login_url = users.create_login_url('/')
         logout_url = users.create_logout_url('/')
         create_account = users.create_login_url('/create')
-        current_person = ''
+        current_person = None
         current_user = users.get_current_user()
-        if not current_user:
-            current_user = None
-        else:
+        # if not current_user:
+        #     current_user = None
+        # else:
+        if current_user:
             current_email = current_user.email()
             #pinpoints the right account for the person who just logged in
             if Profile.query().filter(Profile.email == current_email).get():
                 current_person = Profile.query().filter(Profile.email == current_email).get()
-                templateVars = {
-                    'login_url': login_url,
-                    'current_user': current_user,
-                    'logout_url': logout_url,
-                    'create_account': create_account,
-                    'current_person': current_person,
-                }
-                template = env.get_template('templates/home.html')
-                self.response.write(template.render(templateVars))
             else:
                 self.redirect('/fail')
+        templateVars = {
+            'login_url': login_url,
+            'current_user': current_user,
+            'logout_url': logout_url,
+            'create_account': create_account,
+            'current_person': current_person,
+        }
+        template = env.get_template('templates/home.html')
+        self.response.write(template.render(templateVars))
 
 
 class CreateProfile(webapp2.RequestHandler):
@@ -64,7 +65,7 @@ class CreateProfile(webapp2.RequestHandler):
 
     def post(self):
         email = users.get_current_user().email()
-        first_name = self.request.get('first_name') 
+        first_name = self.request.get('first_name')
         last_name = self.request.get('last_name')
         education = self.request.get('education')
         experience = self.request.get('experience')
@@ -105,6 +106,7 @@ class Update(webapp2.RequestHandler):
             profile.industry = self.request.get("industry")
         if (profile.resume != None):
             profile.resume = self.requet.get("resume")
+        self.redirect("/profile")
 
 
 
