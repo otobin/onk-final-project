@@ -93,6 +93,22 @@ class Update(webapp2.RequestHandler):
     def get(self):
         template = env.get_template("/templates/update_profile.html")
         self.response.write(template)
+<<<<<<< HEAD
+=======
+    def post(self):
+        profile = Profile.query().filter(Profile.email == current_email).get()
+        if (profile.email != "None"):
+            profile.email = self.request.get("email")
+        if (profile.education != "None"):
+            profile.education = self.request.get("education")
+        if (profile.experience != "None"):
+            profile.experience = self.request.get("experience")
+        if (profile.industry != "None"):
+            profile.industry = self.request.get("industry")
+        if (profile.resume != None):
+            profile.resume = self.requet.get("resume")
+
+>>>>>>> f66bc2afa016db1dd46827544bb9dedf43a9a986
 
 
 
