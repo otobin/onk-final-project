@@ -42,19 +42,19 @@ class MainPage(webapp2.RequestHandler):
         else:
             current_email = current_user.email()
             #pinpoints the right account for the person who just logged in
-            current_person = Profile.query().filter(Profile.email == current_email).get()
-            if not current_person:
-                self.redirect("/create")
-
-        templateVars = {
-            'login_url': login_url,
-            'current_user': current_user,
-            'logout_url': logout_url,
-            'create_account': create_account,
-            'current_person': current_person,
-        }
-        template = env.get_template('templates/home.html')
-        self.response.write(template.render(templateVars))
+            if Profile.query().filter(Profile.email == current_email).get():
+                current_person = Profile.query().filter(Profile.email == current_email).get()
+                templateVars = {
+                    'login_url': login_url,
+                    'current_user': current_user,
+                    'logout_url': logout_url,
+                    'create_account': create_account,
+                    'current_person': current_person,
+                }
+                template = env.get_template('templates/home.html')
+                self.response.write(template.render(templateVars))
+            else:
+                self.redirect('/fail')
 
 
 class CreateProfile(webapp2.RequestHandler):
