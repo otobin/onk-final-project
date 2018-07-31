@@ -33,22 +33,32 @@ class MainPage(webapp2.RequestHandler):
         current_user = users.get_current_user()
         if not current_user:
             current_user = None
+            templateVars = {
+                'login_url': login_url,
+                'current_user': current_user,
+                'logout_url': logout_url,
+                'create_account': create_account,
+                'current_person': current_person,
+            }
+            template = env.get_template('templates/home.html')
+            self.response.write(template.render(templateVars))
         else:
             current_email = current_user.email()
             #pinpoints the right account for the person who just logged in
-            current_person = Profile.query().filter(Profile.email == current_email).get()
-            if not current_person:
-                self.redirect("/create")
+            if Profile.query().filter(Profile.email == current_email).get():
+                current_person = Profile.query().filter(Profile.email == current_email).get()
+                templateVars = {
+                    'login_url': login_url,
+                    'current_user': current_user,
+                    'logout_url': logout_url,
+                    'create_account': create_account,
+                    'current_person': current_person,
+                }
+                template = env.get_template('templates/home.html')
+                self.response.write(template.render(templateVars))
+            else:
+                self.redirect('/fail')
 
-        templateVars = {
-            'login_url': login_url,
-            'current_user': current_user,
-            'logout_url': logout_url,
-            'create_account': create_account,
-            'current_person': current_person,
-        }
-        template = env.get_template('templates/home.html')
-        self.response.write(template.render(templateVars))
 
 
 class CreateProfile(webapp2.RequestHandler):
@@ -107,6 +117,11 @@ class ResumeHandler(webapp2.RequestHandler):
         self.response.write(profile.resume)
         # use I frame to display separate window within webpage
 
+class Login_Fail(webapp2.RequestHandler):
+    def get(self):
+        template = env.get_template('/templates/login_fail.html')
+        self.response.write(template.render())
+
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
@@ -115,4 +130,5 @@ app = webapp2.WSGIApplication([
     ('/resume_review', ResumeReview),
     ('/upload_resume', ResumeUpload),
     ('/resume', ResumeHandler),
+    ('/fail', Login_Fail),
 ], debug=True)
