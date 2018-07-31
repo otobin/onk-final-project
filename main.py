@@ -20,7 +20,7 @@ class Profile(ndb.Model):
     experience = ndb.StringProperty()
     industry = ndb.StringProperty()
     email = ndb.StringProperty()
-    suggested_jobs = ndb.ListProperty()
+    #suggested_jobs = ndb.ListProperty()
     resume = ndb.BlobProperty()
 
 dead_words = ['is', 'are,' 'was,' 'were,' 'am,' 'has,' 'have,' 'had,' 'be,' 'been,' 'look,' 'take,' 'took,' 'make,' 'run,' 'ran,' 'go,' 'went,' 'gone,' 'do,' 'did,' 'came,' 'come', 'helped']
@@ -108,19 +108,14 @@ class ResumeHandler(webapp2.RequestHandler):
         self.response.write(profile.resume)
         # use I frame to display separate window within webpage
 
-class Login_Fail(webappp2.RequestHandler):
+class Login_Fail(webapp2.RequestHandler):
     def get(self):
-<<<<<<< HEAD
-        template = env.get_template('/templates/login.html')
-        self.response.write(template.render())
-=======
         logout_url = users.create_logout_url('/')
         templateVar = {
             'logout_url': logout_url
         }
         template = env.get_template('/templates/login_fail.html')
         self.response.write(template.render(templateVar))
->>>>>>> 5114b00915357c7e4e2dccd05867b7585040e50a
 
 class printAdvice(webapp2.RequestHandler):
     def get(self):
@@ -136,13 +131,14 @@ class printAdvice(webapp2.RequestHandler):
 
 def parse_resume():
     current_user = users.get_current_user()
-    current_profile = Profile.query().filter(Profile.email == current_user.email()).get()
+    current_profile = Profile.query().get()
     resume = current_profile.resume
 
     content = ' '.join(resume)#.replace('\n','').replace('\r','').lower()
 
+    print content
     words = {}
-    wordArray = content.split(' ')
+    wordArray = content.split(" ")
 
     print wordArray
     for word in wordArray:
@@ -160,7 +156,7 @@ def find_action_words():
         for action_word in action_words:
             if word == action_word and word not in match:
                 action_match[word] = 1
-            elif word == dead_word:
+            elif word == action_word:
                 action_match[word] += 1
     return action_match
 
@@ -174,8 +170,6 @@ def find_dead_words():
             elif word == dead_word:
                 dead_match[word] += 1
     return dead_match
-
-print find_action_words()
 
 
 app = webapp2.WSGIApplication([
