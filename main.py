@@ -23,7 +23,7 @@ class Profile(ndb.Model):
     #suggested_jobs = ndb.ListProperty()
     resume = ndb.BlobProperty()
 
-dead_words = ['is', 'are,' 'was,' 'were,' 'am,' 'has,' 'have,' 'had,' 'be,' 'been,' 'look,' 'take,' 'took,' 'make,' 'run,' 'ran,' 'go,' 'went,' 'gone,' 'do,' 'did,' 'came,' 'come', 'helped']
+dead_words = ['is', 'are', 'was', 'were', 'am', 'has', 'have', 'had', 'be', 'been', 'look', 'take', 'took', 'make', 'run', 'ran', 'go', 'went', 'gone', 'do', 'did', 'came', 'come', 'helped']
 
 action_words = ['Achieved', 'improved', 'trained', 'maintained', 'mentored', 'managed', 'created', 'resolved', 'volunteered', 'influence', 'increased', 'decreased', 'ideas', 'launched', 'revenue', 'profits', 'under budget', 'won']
 
@@ -218,8 +218,9 @@ class ResumeUpload(webapp2.RequestHandler):
         current_user = users.get_current_user()
         current_profile = Profile.query().filter(Profile.email == current_user.email()).get()
         current_profile.resume = resume
+        print 'test'
         current_profile.put()
-        self.redirect('/resume?key=' + current_profile.key.urlsafe())
+        self.redirect('/')
 
 class ResumeHandler(webapp2.RequestHandler):
     def get(self):
@@ -254,31 +255,23 @@ class ResumeAdvice(webapp2.RequestHandler):
 
 def parse_resume():
     current_user = users.get_current_user()
-    current_profile = Profile.query().get()
-    resume = current_profile.resume
-
-    #content = ' '.join(resume)#.replace('\n','').replace('\r','').lower()
-    # words = {}
+    current_email = current_user.email()
+    current_profile = Profile.query().filter(Profile.email == current_email).get()
+    resume = current_profile.resume.replace('\n','').replace('\r','')
     wordArray = resume.lower().split(' ')
-    # print wordArray
-    # for word in wordArray:
-    #     if (word in words and word is not ''):
-    #         words[word] += 1
-    #     else:
-    #         words[word] = 1
-
     return wordArray
 
 def find_action_words():
     action_match = {}
     words = parse_resume()
+    print words
     for word in words:
         for action_word in action_words:
-            if word == action_word and word not in match:
+            if word == action_word and word not in action_match:
                 action_match[word] = 1
             elif word == action_word:
                 action_match[word] += 1
-    print action_match
+    print dead_words
     return action_match
 
 def find_dead_words():
@@ -286,10 +279,11 @@ def find_dead_words():
     words = parse_resume()
     for word in words:
         for dead_word in dead_words:
-            if word == dead_word and word not in match:
+            if word == dead_word and word not in dead_match:
                 dead_match[word] = 1
             elif word == dead_word:
                 dead_match[word] += 1
+    print dead_match
     return dead_match
 
 
@@ -299,6 +293,7 @@ app = webapp2.WSGIApplication([
     ('/profile', Display_Profile),
     ('/resume_review', ResumeReview),
     ('/resume_advice', ResumeAdvice),
+    ('/upload_resume', ResumeUpload),
     ('/resume', ResumeHandler),
     ('/fail', Login_Fail),
     ('update', Update)
