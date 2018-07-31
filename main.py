@@ -57,7 +57,6 @@ class MainPage(webapp2.RequestHandler):
                 template = env.get_template('templates/home.html')
                 self.response.write(template.render(templateVars))
             else:
-                print("hello")
                 self.redirect('/fail')
 
 
@@ -69,7 +68,7 @@ class CreateProfile(webapp2.RequestHandler):
 
     def post(self):
         email = users.get_current_user().email()
-        first_name = self.request.get('first_name')
+        first_name = self.request.get('first_name') 
         last_name = self.request.get('last_name')
         education = self.request.get('education')
         experience = self.request.get('experience')
