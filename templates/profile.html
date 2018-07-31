@@ -3,13 +3,13 @@
 
 <link rel="stylesheet" href="/stylesheets/profile.css"/>
 
-Name: {{profile.name}}
+Name: {{profile.first_name}}
 Email: {{profile.email}}
 
 
 <embed src="/resume?key={{profile.key.urlsafe}}" width="800px" height="2100px" />
 
-<h1>{{profile.name}}</h1>
+<h1>{{profile.first_name}}</h1>
 <h2>{{profile.email}}</h2>
 {{profile.experience}}
 {{profile.education}}

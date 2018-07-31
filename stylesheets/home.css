@@ -1,55 +1,55 @@
 body{
-  font-family: 'Lato', sans-serif;
+  font-family: 'Montserrat', sans-serif;
   margin: 0;
-  background-color:#B1A296;
 }
-<<<<<<< HEAD
-=======
 
-#header{
-  display:flex;
+#title{
+  background-color:#99e1e5;
+  color: #9062a7;
+  padding-right: 70px;
+  padding-top: 0.5px;
+  padding-bottom: 1px;
+  margin-bottom: 0px;
+}
+
+.panel{
+  display: flex;
   flex-direction: row;
+  justify-content: space-around;
+  background-color: #f2c6b4;
+  padding: 20px;
+  margin: 0px;
+
 }
 
+#log{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  background-color: #f3e8cb;
 
-#headinfo{
-  flex: 4 4 auto;
-  display:flex;
-  flex-direction: column;
-  padding: 10px;
-  background-color: #7395AE;
-  color: white;
 }
 
-#name{
-  font-size:50px;
+a:link, a:visited {
+    color: black;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
 }
 
-.links{
-  padding: 10px;
-  border: 1px solid black;
+.buttons:hover, .buttons:active {
+    background-color: #fbafaf;
 }
 
-#homelink {
-  position: relative;
+/* a:hover, a:active {
+    background-color: #fbafaf;
+} */
+
+.buttons{
+  margin: 0px;
+  padding: 20px;
 }
 
-#createAccount {
-  position: relative;
-  left: 1300px;
-}
+#body{
 
-#profilelink{
-  position: relative;
-  
 }
-.MainPage{
-  padding: 100px;
-  margin: 10px;
-  border: 1px solid black;
-}
-
-a{
-  text-decoration: none;
-}
->>>>>>> 383bd6d02cb7000a22b2b864547c9adc0364e63d

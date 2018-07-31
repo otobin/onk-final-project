@@ -1,5 +1,42 @@
 <!DOCTYPE html>
 <title>Job Finder - Home</title>
-<link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 <link rel="stylesheet" href="/stylesheets/home.css"/>
+
+<div id="title">
+  <h1>
+    &emsp; &ensp; Welcome to name
+  </h1>
+</div>
+
+{% if current_user %}
+{{current_person.key.urlsafe()}}
+<div class="panel">
+  <div class="buttons">
+    <a href="/">Home</a>
+  </div>
+  <div class="buttons">
+    <a href="/profile?key={{current_person.key.urlsafe()}}">Profile</a>
+  </div>
+  <div class="buttons">Resume Review</div>
+  <div class="buttons">
+    <a href="{{logout_url}}">Log out</a>
+  </div>
+</div>
+
+{% else %}
+<div class="panel">
+  <div class="buttons">
+    <a href="{{create_account}}">Sign Up!</a>
+  </div>
+  <div class="buttons">
+    <a href="{{login_url}}">Log in</a>
+  </div>
+</div>
+{% endif %}
+
+<div id="body">
+
+</div>
+
+<script src="/js/jquery.js"></script>

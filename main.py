@@ -26,21 +26,16 @@ class MainPage(webapp2.RequestHandler):
     def get(self):
         logging.info('This is the main handler')
         #This part of the code is to direc the user to either login, logout, or create account
-        login_url = ''
-        logout_url = ''
-        create_account = ''
+        login_url = users.create_login_url('/')
+        logout_url = users.create_logout_url('/')
+        create_account = users.create_login_url('/create')
         current_person = ''
         current_user = users.get_current_user()
         if not current_user:
-            login_url = users.create_login_url('/')
-            create_account = users.create_login_url('/create')
+            current_user = None
         else:
-            logout_url = users.create_logout_url('/')
             current_email = current_user.email()
-<<<<<<< HEAD
             #pinpoints the right account for the person who just logged in
-=======
->>>>>>> e2bc059b0a2d4880e028763e52992319bd0e57a6
             current_person = Profile.query().filter(Profile.email == current_email).get()
 
         templateVars = {
@@ -61,7 +56,6 @@ class CreateProfile(webapp2.RequestHandler):
 
     def post(self):
         email = users.get_current_user().email()
-<<<<<<< HEAD
         first_name = self.request.get('first_name')
         last_name = self.request.get('last_name')
         education = self.request.get('education')
@@ -69,27 +63,19 @@ class CreateProfile(webapp2.RequestHandler):
         industry = self.request.get('industry')
         profile = Profile(email=email, first_name=first_name, last_name=last_name, education=education,
         experience=experience, industry=industry)
-=======
-        name = self.request.get('name')
-        experience = self.request.get('experience')
-        education = self.request.get('education')
-        industry = self.request.get('industry')
-        profile = Profile(email=email, name=name, industry = industry, experience = experience, education = education)
->>>>>>> 383bd6d02cb7000a22b2b864547c9adc0364e63d
         profile.put()
         self.redirect('/')
 
 class Display_Profile(webapp2.RequestHandler):
     def get(self):
         urlsafe_key = self.request.get('key')
-        current_user = users.get_current_user()
         key = ndb.Key(urlsafe=urlsafe_key)
         profile=key.get()
-
+        logging.info(profile)
         templateVars = {
             'profile' : profile,
         }
-        template = env.get_template('templates/profile.html')
+        template = env.get_template('/templates/profile.html')
         self.response.write(template.render(templateVars))
 
 
