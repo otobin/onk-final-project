@@ -93,7 +93,6 @@ class Update(webapp2.RequestHandler):
     def get(self):
         template = env.get_template("/templates/update_profile.html")
         self.response.write(template)
-    def post(self):
 
 
 
