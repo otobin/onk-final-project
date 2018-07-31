@@ -3,3 +3,53 @@ body{
   margin: 0;
   background-color:#B1A296;
 }
+<<<<<<< HEAD
+=======
+
+#header{
+  display:flex;
+  flex-direction: row;
+}
+
+
+#headinfo{
+  flex: 4 4 auto;
+  display:flex;
+  flex-direction: column;
+  padding: 10px;
+  background-color: #7395AE;
+  color: white;
+}
+
+#name{
+  font-size:50px;
+}
+
+.links{
+  padding: 10px;
+  border: 1px solid black;
+}
+
+#homelink {
+  position: relative;
+}
+
+#createAccount {
+  position: relative;
+  left: 1300px;
+}
+
+#profilelink{
+  position: relative;
+  
+}
+.MainPage{
+  padding: 100px;
+  margin: 10px;
+  border: 1px solid black;
+}
+
+a{
+  text-decoration: none;
+}
+>>>>>>> 383bd6d02cb7000a22b2b864547c9adc0364e63d

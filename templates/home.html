@@ -3,3 +3,31 @@
 <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
 
 <link rel="stylesheet" href="/stylesheets/home.css"/>
+<<<<<<< HEAD
+=======
+<div id=header>
+  <div id=headinfo>
+    <h1 id=name> Job Finder </h1>
+
+    <div class=links>
+      {% if current_user %}
+<<<<<<< HEAD
+      Welcome, {{current_user}}
+      <a href='{{logout_url}}'>Log out here</a>
+      <
+=======
+      Welcome, {{current_person.name}}
+      <a href='{{logout_url}}'>Log out here</a><br>
+>>>>>>> ebcc552c19c534875f63bae219600444aacc0c6e
+      {% else %}
+      <a href='{{login_url}}'>Log in here</a>
+      <a href='{{create_account}}'>Sign Up!</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<div class=MainPage>
+
+</div>
+>>>>>>> 383bd6d02cb7000a22b2b864547c9adc0364e63d

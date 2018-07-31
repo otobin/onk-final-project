@@ -58,6 +58,7 @@ class CreateProfile(webapp2.RequestHandler):
 
     def post(self):
         email = users.get_current_user().email()
+<<<<<<< HEAD
         first_name = self.request.get('first_name')
         last_name = self.request.get('last_name')
         education = self.request.get('education')
@@ -65,6 +66,13 @@ class CreateProfile(webapp2.RequestHandler):
         industry = self.request.get('industry')
         profile = Profile(email=email, first_name=first_name, last_name=last_name, education=education,
         experience=experience, industry=industry)
+=======
+        name = self.request.get('name')
+        experience = self.request.get('experience')
+        education = self.request.get('education')
+        industry = self.request.get('industry')
+        profile = Profile(email=email, name=name, industry = industry, experience = experience, education = education)
+>>>>>>> 383bd6d02cb7000a22b2b864547c9adc0364e63d
         profile.put()
         self.redirect('/')
 
