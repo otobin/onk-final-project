@@ -5,7 +5,7 @@
 
 <h2>Make a Profile<h2>
 
-<form method="post" action="/create">
+<form method="post" action="/profile" enctype="multipart/form-data">
   <div id = "information">
     First name: <input type='text' name='first_name'><br>
     Last name: <input type='test' name='last_name'><br>
@@ -55,13 +55,10 @@
       <option value = "water">Water</option>
     </select>
   </div>
-  <div id = "create">
-    <button>Create a Profile</button><br>
-  </div>
-</form>
-<form action="/upload_resume" method="post" enctype="multipart/form-data">
   <div id = "resume">
     Upload your resume: <br><input name="resume" type="file"><br>
-    <button>Upload</button>
+  </div>
+  <div id = "create">
+    <button>Create a Profile</button><br>
   </div>
 </form>
