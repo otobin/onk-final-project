@@ -1,6 +1,7 @@
 import webapp2
 import jinja2
 import os
+import StringIO
 import logging
 
 from google.appengine.ext import ndb
@@ -20,6 +21,12 @@ class Profile(ndb.Model):
     industry = ndb.StringProperty()
     email = ndb.StringProperty()
     resume = ndb.BlobProperty()
+
+dead_words = ['is', 'are,' 'was,' 'were,' 'am,' 'has,' 'have,' 'had,' 'be,' 'been,' 'look,' 'take,' 'took,' 'make,' 'run,' 'ran,' 'go,' 'went,' 'gone,' 'do,' 'did,' 'came,' 'come', 'helped']
+
+action_words = ['Achieved', 'improved', 'trained', 'maintained', 'mentored', 'managed', 'created', 'resolved', 'volunteered', 'influence', 'increased', 'decreased', 'ideas', 'launched', 'revenue', 'profits', 'under budget', 'won']
+
+
 
 
 class MainPage(webapp2.RequestHandler):
@@ -101,22 +108,44 @@ def parse_resume():
     current_user = users.get_current_user()
     current_profile = Profile.query().filter(Profile.email == current_user.email()).get()
     resume = current_profile.resume
-    #os.rename(resume, 'shortened_resume.txt')
-    with open('shortened_resume.txt') as f:
-        content = ' '.join(f.readlines()).replace('\n','').replace('\r','').lower()
+
+    content = ' '.join(resume).replace('\n','').replace('\r','').lower()
 
     words = {}
-    wordArray = content.split(" ")
+    wordArray = content.split(' ')
 
+    print wordArray
     for word in wordArray:
-        if (word in words and word is not ""):
+        if (word in words and word is not ''):
             words[word] += 1
         else:
             words[word] = 1
 
     return words
 
-parse_resume()
+def find_action_words():
+    action_match = {}
+    words = parse_resume()
+    for word in words:
+        for action_word in action_words:
+            if word == action_word and word not in match:
+                action_match[word] = 1
+            elif word == dead_word:
+                action_match[word] += 1
+    return key_match
+
+def find_dead_words():
+    dead_match = {}
+    words = parse_resume()
+    for word in words:
+        for dead_word in dead_words:
+            if word == dead_word and word not in match:
+                dead_match[word] = 1
+            elif word == dead_word:
+                dead_match[word] += 1
+    return key_match
+
+print find_key_words()
 
 
 
