@@ -33,6 +33,15 @@ class MainPage(webapp2.RequestHandler):
         current_user = users.get_current_user()
         if not current_user:
             current_user = None
+            templateVars = {
+                'login_url': login_url,
+                'current_user': current_user,
+                'logout_url': logout_url,
+                'create_account': create_account,
+                'current_person': current_person,
+            }
+            template = env.get_template('templates/home.html')
+            self.response.write(template.render(templateVars))
         else:
             current_email = current_user.email()
             #pinpoints the right account for the person who just logged in
@@ -80,6 +89,9 @@ class Display_Profile(webapp2.RequestHandler):
         }
         template = env.get_template('/templates/profile.html')
         self.response.write(template.render(templateVars))
+    def post(self):
+        self.redirect("/create")
+
 
 
 class ResumeReview(webapp2.RequestHandler):
