@@ -73,10 +73,11 @@ class CreateProfile(webapp2.RequestHandler):
         education = self.request.get('education')
         experience = self.request.get('experience')
         industry = self.request.get('industry')
+        resume = self.request.get('resume')
         profile = Profile(email=email, first_name=first_name, last_name=last_name, education=education,
-        experience=experience, industry=industry)
-        profile.put()
-        self.redirect('/')
+        experience=experience, industry=industry, resume = resume)
+        key = profile.put().urlsafe()
+        self.redirect('/profile?key=' + key)
 
 class Display_Profile(webapp2.RequestHandler):
     def get(self):
