@@ -260,7 +260,7 @@ def parse_resume():
 
     #content = ' '.join(resume)#.replace('\n','').replace('\r','').lower()
     # words = {}
-    wordArray = resume.split(' ')
+    wordArray = resume.lower().split(' ')
     # print wordArray
     # for word in wordArray:
     #     if (word in words and word is not ''):
@@ -279,6 +279,7 @@ def find_action_words():
                 action_match[word] = 1
             elif word == action_word:
                 action_match[word] += 1
+    print action_match
     return action_match
 
 def find_dead_words():
