@@ -35,23 +35,27 @@ class MainPage(webapp2.RequestHandler):
         login_url = users.create_login_url('/')
         logout_url = users.create_logout_url('/')
         create_account = users.create_login_url('/create')
-        current_person = ''
+        current_person = None
         current_user = users.get_current_user()
-        current_email = current_user.email()
-        #pinpoints the right account for the person who just logged in
-        if Profile.query().filter(Profile.email == current_email).get() != None:
-            current_person = Profile.query().filter(Profile.email == current_email).get()
-            templateVars = {
-                'login_url': login_url,
-                'current_user': current_user,
-                'logout_url': logout_url,
-                'create_account': create_account,
-                'current_person': current_person,
-            }
-            template = env.get_template('templates/home.html')
-            self.response.write(template.render(templateVars))
-        else:
-            self.redirect('/fail')
+        # if not current_user:
+        #     current_user = None
+        # else:
+        if current_user:
+            current_email = current_user.email()
+            #pinpoints the right account for the person who just logged in
+            if Profile.query().filter(Profile.email == current_email).get():
+                current_person = Profile.query().filter(Profile.email == current_email).get()
+            else:
+                self.redirect('/fail')
+        templateVars = {
+            'login_url': login_url,
+            'current_user': current_user,
+            'logout_url': logout_url,
+            'create_account': create_account,
+            'current_person': current_person,
+        }
+        template = env.get_template('templates/home.html')
+        self.response.write(template.render(templateVars))
 
 
 class CreateProfile(webapp2.RequestHandler):
@@ -91,7 +95,20 @@ class Update(webapp2.RequestHandler):
         template = env.get_template("/templates/update_profile.html")
         self.response.write(template)
     def post(self):
-        pass
+        profile = Profile.query().filter(Profile.email == current_email).get()
+        if (profile.email != "None"):
+            profile.email = self.request.get("email")
+        if (profile.education != "None"):
+            profile.education = self.request.get("education")
+        if (profile.experience != "None"):
+            profile.experience = self.request.get("experience")
+        if (profile.industry != "None"):
+            profile.industry = self.request.get("industry")
+        if (profile.resume != None):
+            profile.resume = self.requet.get("resume")
+        self.redirect("/profile")
+
+
 
 
 class ResumeUpload(webapp2.RequestHandler):
