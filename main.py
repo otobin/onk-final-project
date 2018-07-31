@@ -37,10 +37,8 @@ class MainPage(webapp2.RequestHandler):
         else:
             logout_url = users.create_logout_url('/')
             current_email = current_user.email()
-<<<<<<< HEAD
             #pinpoints the right account for the person who just logged in
-=======
->>>>>>> e2bc059b0a2d4880e028763e52992319bd0e57a6
+
             current_person = Profile.query().filter(Profile.email == current_email).get()
 
         templateVars = {
@@ -61,7 +59,6 @@ class CreateProfile(webapp2.RequestHandler):
 
     def post(self):
         email = users.get_current_user().email()
-<<<<<<< HEAD
         first_name = self.request.get('first_name')
         last_name = self.request.get('last_name')
         education = self.request.get('education')
@@ -69,13 +66,7 @@ class CreateProfile(webapp2.RequestHandler):
         industry = self.request.get('industry')
         profile = Profile(email=email, first_name=first_name, last_name=last_name, education=education,
         experience=experience, industry=industry)
-=======
-        name = self.request.get('name')
-        experience = self.request.get('experience')
-        education = self.request.get('education')
-        industry = self.request.get('industry')
-        profile = Profile(email=email, name=name, industry = industry, experience = experience, education = education)
->>>>>>> 383bd6d02cb7000a22b2b864547c9adc0364e63d
+
         profile.put()
         self.redirect('/')
 
@@ -92,11 +83,6 @@ class Display_Profile(webapp2.RequestHandler):
         template = env.get_template('templates/profile.html')
         self.response.write(template.render(templateVars))
 
-
-class ResumeReview(webapp2.RequestHandler):
-    def get(self):
-        template = env.get_template("templates/resume_upload.html")
-        self.response.write(template.render())
 
 class ResumeUpload(webapp2.RequestHandler):
     def post(self):
@@ -116,12 +102,33 @@ class ResumeHandler(webapp2.RequestHandler):
         self.response.write(profile.resume)
         # use I frame to display separate window within webpage
 
+def parse_resume():
+    current_user = users.get_current_user()
+    current_profile = Profile.query().filter(Profile.email == current_user.email()).get()
+    resume = current_profile.resume
+    #os.rename(resume, 'shortened_resume.txt')
+    with open('shortened_resume.txt') as f:
+        content = ' '.join(f.readlines()).replace('\n','').replace('\r','').lower()
+
+    words = {}
+    wordArray = content.split(" ")
+
+    for word in wordArray:
+        if (word in words and word is not ""):
+            words[word] += 1
+        else:
+            words[word] = 1
+
+    return words
+
+parse_resume()
+
+
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/create', CreateProfile),
     ('/profile', Display_Profile),
-    ('/resume_review', ResumeReview),
     ('/upload_resume', ResumeUpload),
     ('/resume', ResumeHandler),
 ], debug=True)
