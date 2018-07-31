@@ -43,9 +43,8 @@ class MainPage(webapp2.RequestHandler):
         if current_user:
             current_email = current_user.email()
             #pinpoints the right account for the person who just logged in
-            if Profile.query().filter(Profile.email == current_email).get():
-                current_person = Profile.query().filter(Profile.email == current_email).get()
-            else:
+            current_person = Profile.query().filter(Profile.email == current_email).get()
+            if not current_person:
                 self.redirect('/fail')
         templateVars = {
             'login_url': login_url,
