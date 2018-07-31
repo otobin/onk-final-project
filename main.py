@@ -110,8 +110,17 @@ class ResumeHandler(webapp2.RequestHandler):
 
 class Login_Fail(webappp2.RequestHandler):
     def get(self):
+<<<<<<< HEAD
         template = env.get_template('/templates/login.html')
         self.response.write(template.render())
+=======
+        logout_url = users.create_logout_url('/')
+        templateVar = {
+            'logout_url': logout_url
+        }
+        template = env.get_template('/templates/login_fail.html')
+        self.response.write(template.render(templateVar))
+>>>>>>> 5114b00915357c7e4e2dccd05867b7585040e50a
 
 class printAdvice(webapp2.RequestHandler):
     def get(self):
