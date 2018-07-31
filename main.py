@@ -34,7 +34,7 @@ class MainPage(webapp2.RequestHandler):
             create_account = users.create_login_url('/create')
         else:
             logout_url = users.create_logout_url('/')
-            current_email = current_user.emil()
+            current_email = current_user.email()
             current_person = Profile.query().filter(Profile.email == current_email).get()
 
         profile = Profile.query().get()
@@ -53,6 +53,7 @@ class CreateProfile(webapp2.RequestHandler):
     def get(self):
         template = env.get_template('templates/create_profile.html')
         self.response.write(template.render())
+
     def post(self):
         email = users.get_current_user().email()
         name = self.request.get('name')
@@ -96,8 +97,9 @@ class ResumeHandler(webapp2.RequestHandler):
         urlsafe_key = resume = self.request.get('key')
         key = ndb.Key(urlsafe=urlsafe_key)
         profile = key.get()
-        self.response.headers['Content-Type'] = 'application/pdf'
+        self.response.headers['Content-Type'] = 'text/xml'
         self.response.write(profile.resume)
+        # use I frame to display separate window within webpage
 
 
 app = webapp2.WSGIApplication([
