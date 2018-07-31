@@ -37,7 +37,10 @@ class MainPage(webapp2.RequestHandler):
         else:
             logout_url = users.create_logout_url('/')
             current_email = current_user.email()
+<<<<<<< HEAD
             #pinpoints the right account for the person who just logged in
+=======
+>>>>>>> e2bc059b0a2d4880e028763e52992319bd0e57a6
             current_person = Profile.query().filter(Profile.email == current_email).get()
 
         templateVars = {
@@ -109,8 +112,9 @@ class ResumeHandler(webapp2.RequestHandler):
         urlsafe_key = resume = self.request.get('key')
         key = ndb.Key(urlsafe=urlsafe_key)
         profile = key.get()
-        self.response.headers['Content-Type'] = 'application/pdf'
+        self.response.headers['Content-Type'] = 'text/xml'
         self.response.write(profile.resume)
+        # use I frame to display separate window within webpage
 
 
 app = webapp2.WSGIApplication([
