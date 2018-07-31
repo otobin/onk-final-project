@@ -108,6 +108,11 @@ class ResumeHandler(webapp2.RequestHandler):
         self.response.write(profile.resume)
         # use I frame to display separate window within webpage
 
+class Login_Fail(webappp2.RequestHandler):
+    def get(self):
+        template = env.get_template('/templates/login.html')
+        self.response.write(template.render())
+
 class printAdvice(webapp2.RequestHandler):
     def get(self):
         dead_match = find_dead_words()
@@ -164,12 +169,12 @@ def find_dead_words():
 print find_action_words()
 
 
-
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/create', CreateProfile),
     ('/profile', Display_Profile),
     ('/upload_resume', ResumeUpload),
     ('/resume', ResumeHandler),
-    ('/advice', printAdvice)
+    ('/advice', printAdvice),
+    ('/fail', Login_Fail),
 ], debug=True)
