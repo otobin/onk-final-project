@@ -69,9 +69,8 @@ class CreateProfile(webapp2.RequestHandler):
         education = self.request.get('education')
         experience = self.request.get('experience')
         industry = self.request.get('industry')
-        resume = self.request.get('resume')
         profile = Profile(email=email, first_name=first_name, last_name=last_name, education=education,
-        experience=experience, industry=industry, resume = resume)
+        experience=experience, industry=industry)
         key = profile.put().urlsafe()
         self.redirect('/profile?key=' + key)
 
@@ -81,8 +80,14 @@ class Display_Profile(webapp2.RequestHandler):
         key = ndb.Key(urlsafe=urlsafe_key)
         profile=key.get()
         logging.info(profile)
+        current_user = users.get_current_user()
+        logout_url = users.create_logout_url('/')
+        current_email = current_user.email()
+        current_person = Profile.query().filter(Profile.email == current_email).get()
         templateVars = {
             'profile' : profile,
+            'logout_url': logout_url,
+            'current_person': current_person,
         }
         template = env.get_template('/templates/profile.html')
         self.response.write(template.render(templateVars))
@@ -92,22 +97,25 @@ class Display_Profile(webapp2.RequestHandler):
 class Update(webapp2.RequestHandler):
     def get(self):
         template = env.get_template("/templates/update_profile.html")
-        self.response.write(template)
+        self.response.write(template.render())
     def post(self):
-        current_user = users.get_current_user()
-        current_email = current_user.email()
+        current_email = users.get_current_user().email()
         profile = Profile.query().filter(Profile.email == current_email).get()
-        if (profile.email != "None"):
-            profile.email = self.request.get("email")
-        if (profile.education != "None"):
-            profile.education = self.request.get("education")
-        if (profile.experience != "None"):
-            profile.experience = self.request.get("experience")
-        if (profile.industry != "None"):
+        first_name = self.request.get('first_name')
+        last_name = self.request.get('last_name')
+        education = self.request.get('education')
+        experience = self.request.get('experience')
+        industry = self.request.get('industry')
+        if first_name != "none":
+             profile.first_name = self.request.get("first_name")
+        if (education != "none"):
+             profile.education = self.request.get("education")
+        if (experience != "none"):
+             profile.experience = self.request.get("experience")
+        if (industry != "none"):
             profile.industry = self.request.get("industry")
-        if (profile.resume != None):
-            profile.resume = self.request.get("resume")
-        self.redirect("/profile")
+        key = profile.put().urlsafe()
+        self.redirect('/profile?key=' + key)
 
 class ResumeReview(webapp2.RequestHandler):
     def get(self):

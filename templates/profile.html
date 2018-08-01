@@ -1,24 +1,56 @@
 <!DOCTYPE html>
 <title>Your Profile</title>
-
 <link rel="stylesheet" href="/stylesheets/profile.css"/>
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet">
 
-
-<div id = "maininfo">
-  <h1>{{profile.first_name}}</h1>
-  <h2>{{profile.email}}</h2>
+<div id="title">
+  <div id="work">
+    <h1>
+      WorkForce®
+    </h1>
+  </div>
+  <div id="goldman">
+    <img src="/images/goldman.jpg" width="200px">
+  </div>
 </div>
 
-<div id = "otherinfo">
-  <p>Experience: {{profile.experience}} </p>
-  <p>Education: {{profile.education}}</p>
-  <p>Looking for a job in the {{profile.industry}} industry </p>
+<div class="panel">
+  <div class="buttons">
+    <a href="/">Home</a>
+  </div>
+  <div class="buttons">
+    <a href="/profile?key={{current_person.key.urlsafe()}}">Profile</a>
+  </div>
+  <div class="buttons">
+    Resume Review
+  </div>
+  <div class="buttons">
+    <a href="{{logout_url}}">Log out</a>
+  </div>
 </div>
 
-<!-- <div id = "resume"
-  <embed src="/resume?key={{profile.key.urlsafe}}" width="800px" height="2100px" />
-</div> -->
+<div id="body">
+  <div id="content">
+    <h2>Profile</h2><br>
+    <strong>{{profile.first_name}}</strong> {{profile.last_name}} <br>
+    <strong>E-mail:</strong> {{profile.email}} <br><br>
+    <strong>Education:</strong> {{profile.education}}<br><br>
+    <strong>Industry:</strong> {{profile.industry}}<br><br>
+    <strong>Experience:</strong> {{profile.experience}}
+    <br><br><br><br><br><br>
+    <div id="update">
+      <form method = "post" action = "/profile">
+        <button id = "update">Update Profile</button>
+      </form>
+    </div>
+  </div>
+  <div id="picture">
+    <br>
+    <img src="images/profile.jpg" width="600px">
+  </div>
+</div>
 
-<form method = "post" action = "/update">
+<form method = "post" action = "/profile">
   <button id = "update">Update Profile</button>
 </form>
