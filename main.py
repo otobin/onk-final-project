@@ -102,13 +102,13 @@ class Update(webapp2.RequestHandler):
         experience = self.request.get('experience')
         industry = self.request.get('industry')
         resume = self.request.get('resume')
-        if first_name != "None":
+        if first_name != "none":
              profile.first_name = self.request.get("first_name")
-        if (education != "None"):
+        if (education != "none"):
              profile.education = self.request.get("education")
-        if (experience != "None"):
+        if (experience != "none"):
              profile.experience = self.request.get("experience")
-        if (industry != "None"):
+        if (industry != "none"):
             profile.industry = self.request.get("industry")
         if (resume != None):
             profile.resume = self.request.get("resume")
