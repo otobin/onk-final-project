@@ -146,7 +146,6 @@ class ResumeAdvice(webapp2.RequestHandler):
     def get(self):
         dead_match = find_dead_words()
         action_match = find_action_words()
-
         templateVars = {
             'dead_match' : dead_match,
             'action_match' : action_match
@@ -187,6 +186,7 @@ def find_dead_words():
                 dead_match[word] += 1
     print dead_match
     return dead_match
+
 
 
 app = webapp2.WSGIApplication([
