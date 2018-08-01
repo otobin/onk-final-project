@@ -6,6 +6,7 @@ body, html {
 body{
   font-family: 'Montserrat', sans-serif;
   margin: 0;
+  color: white;
 }
 
 #work{
@@ -56,21 +57,26 @@ body{
 }
 
 #body{
-  background-color: #269F9D;
+  background-color: #64C3AC;
   height: 100%;
   width: 100%;
   display: flex;
   flex-direction: row;
 }
 
+#content {
+  width: 100%;
+  padding-left: 50px;
+  font-size: 20px;
+}
+
 
 #picture{
-  float:right;
   width: 100%;
-  height: 100%;
-  justify-content: center;
-  padding-left: 400px
-  display: flex;
+}
+
+#header {
+  font-size: 25px;
 }
 
 a:link, a:visited {
