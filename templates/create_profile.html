@@ -15,23 +15,21 @@
   </div>
 </div>
 
-<div class="panel">
-  <div class="buttons">
-    <a href="/">Home</a>
-  </div>
-  <div class="buttons">
-    <a href="{{logout_url}}">Log out</a>
-  </div>
-</div>
 
 
 <div id = "body">
   <div id = "content">
-    <h2>Make a Profile<h2>
+    <br>
+    <br>
+    <div id = "header">
+      <h2>Make a Profile<h2>
+    </div>
     <form method="post" action="/create">
       <div id = "information">
         First name: <input type='text' name='first_name'><br>
+        <p></p>
         Last name: <input type='test' name='last_name'><br>
+        <p></p>
       </div>
       <div id = "education">
         <label>Education</label>
@@ -44,6 +42,7 @@
           <option value = "Graduate School">Graduate School</option>
         </select>
       </div>
+      <p></p>
       <div id = "work_experience">
         <label>Work Experience</label>
         <select name = "experience">
@@ -55,6 +54,7 @@
           <option value = "Professional">Professional</option>
         </select>
       </div>
+      <p></p>
       <div id = "industry">
         <label>Current Industry or Interest</label>
         <select name = "industry">
@@ -81,11 +81,16 @@
           <option value = "Water">Water</option>
         </select>
       </div>
+      <p></p>
+      <br>
+      <br>
       <div id = "create">
         <input type = "submit" value = "Create a Profile">
       </div>
     </div>
     <div id="picture">
+      <br>
+      <br>
       <br>
       <img src="images/create_profile.jpg" width="600px">
     </div>

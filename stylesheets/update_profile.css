@@ -56,8 +56,9 @@ body{
 
 }
 
+
 #body{
-  background-color: #64C3AC;
+  background-color: #6CBBC3;
   height: 100%;
   width: 100%;
   display: flex;
@@ -70,13 +71,12 @@ body{
   font-size: 20px;
 }
 
+#header {
+  font-size: 25px;
+}
 
 #picture{
   width: 100%;
-}
-
-#header {
-  font-size: 25px;
 }
 
 a:link, a:visited {
@@ -93,7 +93,3 @@ a:link, a:visited {
     padding-right: 7px;
     transition: .4s;
 }
-
-/* a:hover, a:active {
-    background-color: #fbafaf;
-} */
