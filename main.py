@@ -94,7 +94,7 @@ class Display_Profile(webapp2.RequestHandler):
     def post(self): #To do: if else to override or create new profile
         self.redirect("/update")
 
-class Update(webapp2.RequestHandler):
+class Update_Profile(webapp2.RequestHandler):
     def get(self):
         template = env.get_template("/templates/update_profile.html")
         self.response.write(template.render())
@@ -117,20 +117,22 @@ class Update(webapp2.RequestHandler):
         key = profile.put().urlsafe()
         self.redirect('/profile?key=' + key)
 
-class ResumeReview(webapp2.RequestHandler):
+# class ResumeReview(webapp2.RequestHandler):
+#     def get(self):
+#         template = env.get_template("templates/resume_upload.html")
+#         self.response.write(template.render())
+
+class ResumeUpload(webapp2.RequestHandler):
     def get(self):
         template = env.get_template("templates/resume_upload.html")
         self.response.write(template.render())
-
-class ResumeUpload(webapp2.RequestHandler):
     def post(self):
         resume = self.request.get('resume')
         current_user = users.get_current_user()
         current_profile = Profile.query().filter(Profile.email == current_user.email()).get()
         current_profile.resume = resume
-        print 'test'
         current_profile.put()
-        self.redirect('/')
+        self.redirect('/resume_advice')
 
 class ResumeHandler(webapp2.RequestHandler):
     def get(self):
@@ -166,7 +168,8 @@ def parse_resume():
     current_user = users.get_current_user()
     current_email = current_user.email()
     current_profile = Profile.query().filter(Profile.email == current_email).get()
-    resume = current_profile.resume.replace('\n','').replace('\r','')
+    resume = current_profile.resume
+    resume = resume.replace('\n','').replace('\r','')
     wordArray = resume.lower().split(' ')
     return wordArray
 
@@ -209,10 +212,10 @@ app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/create', CreateProfile),
     ('/profile', Display_Profile),
-    ('/resume_review', ResumeReview),
+    # ('/resume_review', ResumeReview),
     ('/resume_advice', ResumeAdvice),
     ('/upload_resume', ResumeUpload),
     ('/resume', ResumeHandler),
     ('/fail', Login_Fail),
-    ('/update', Update)
+    ('/update', Update_Profile)
 ], debug=True)
