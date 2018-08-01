@@ -173,25 +173,33 @@ def parse_resume():
 def find_action_words():
     action_match = {}
     words = parse_resume()
+    action_count = 0
     print words
     for word in words:
         for action_word in action_words:
             if word == action_word and word not in action_match:
                 action_match[word] = 1
+                action_count += 1
             elif word == action_word:
                 action_match[word] += 1
+                action_count += 1
+    action_match['count'] = action_count
     print dead_words
     return action_match
 
 def find_dead_words():
     dead_match = {}
     words = parse_resume()
+    dead_count = 0
     for word in words:
         for dead_word in dead_words:
             if word == dead_word and word not in dead_match:
                 dead_match[word] = 1
+                dead_count += 1
             elif word == dead_word:
                 dead_match[word] += 1
+                dead_count += 1
+    dead_match['count'] = dead_count
     print dead_match
     return dead_match
 
