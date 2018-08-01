@@ -1,0 +1,95 @@
+body, html {
+  height: 100%;
+  width: 100%;
+}
+
+body{
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  color: white;
+}
+
+#work{
+  color: white;
+  padding-left: 40px;
+  text-align: left;
+  float: left;
+  width: 100%;
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+
+#goldman{
+  margin: 0;
+  padding: 0;
+  text-align: right;
+  float: right;
+  width: 100%;
+  padding-right: 10px;
+}
+
+#title{
+  background-color: #64ACFC;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.panel{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  background-color: #98C6F4;
+  padding: 0px;
+  margin: 0px;
+  line-height: 45px;
+  height: 45px;
+}
+
+#log{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  background-color: #f3e8cb;
+
+}
+
+
+#body{
+  background-color: #6CBBC3;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+#content {
+  width: 100%;
+  padding-left: 50px;
+  font-size: 20px;
+}
+
+#header {
+  font-size: 25px;
+}
+
+#picture{
+  width: 100%;
+}
+
+a:link, a:visited {
+    color: black;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.buttons:hover, a.active{
+    background-color: #63ABBA;
+    margin: 0px;
+    padding-left: 7px;
+    padding-right: 7px;
+    transition: .4s;
+}
