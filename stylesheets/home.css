@@ -46,6 +46,14 @@ body{
   line-height: 45px;
   height: 45px;
 }
+.buttons:hover, a.active{
+    background-color: #63ABBA;
+    margin-left: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+    transition: .5s;
+}
+
 
 #log{
   display: flex;
@@ -88,13 +96,6 @@ a:link, a:visited {
     display: inline-block;
 }
 
-.buttons:hover, a.active{
-    background-color: #63ABBA;
-    margin: 0px;
-    padding-left: 7px;
-    padding-right: 7px;
-    transition: .4s;
-}
 
 /* a:hover, a:active {
     background-color: #fbafaf;

@@ -1,6 +1,37 @@
 <!DOCTYPE html>
+<link rel="stylesheet" href="/stylesheets/upload_resume.css"/>
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet">
 <title>Upload your resume</title>
 
+<div id="title">
+  <div id="work">
+    <h1>
+      WorkForce®
+    </h1>
+  </div>
+  <div id="goldman">
+    <img src="/images/goldman.jpg" width="200px">
+  </div>
+</div>
+
+<div class="panel">
+  <div class="buttons">
+    <a href="/">Home</a>
+  </div>
+  <div class="buttons">
+    <a href="/profile?key={{current_person.key.urlsafe()}}">Profile</a>
+  </div>
+  <div class="buttons">
+    <a href="/upload_resume?key={{current_person.key.urlsafe()}}">Resume Review</a>
+  </div>
+  <div class="buttons">
+    <a href="{{logout_url}}">Log out</a>
+  </div>
+</div>
+
+
+<br><br><br><br>
 <form action="/upload_resume" method="post" enctype="multipart/form-data">
   Upload your resume: <br><input name="resume" type="file"><br>
   <button>Upload</button>
