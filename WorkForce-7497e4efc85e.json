@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "workforce-211922",
+  "private_key_id": "7497e4efc85ebcc82861a3f92566a15a61aebfb0",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDaL6n4OkdEX17U\nqBdkk6UjtM6xrm85dntQz43S9vOTnSzgZT2CMWo16lAExT7U4Mpj9Vh/FW+Kzi1Z\neUYYfooAOBUrToaK7iHsxW5flGLBvmF9lMOto/cOmiofa4opp+XpDF6Be+Nj1rLS\ncUIO6OLyP4gAklObzydORqg2KDjbl7gGdU4rNwqeaVXoUUqY6m50A0F16i5MvSJ/\nlW1zzboNUtzDQuTwUON/F8SUIyEpL9/06BYYEwLU07+eUm9eLD0dPNsXuF1xLkBy\nNqW+eduVAjYnOBHzEMM7xdYMZ1fKAyhUYzp/waxSG146xanI/VQj3SIaq/BMcrKS\nAG3PEjpdAgMBAAECggEAFdHSc6qQWfwXpbixrjM9vpZkXUyOfvakWm6HRmO/9DEx\nvbciMZTzhDTMj82R/QQF+X0dvofMQdtgmaQRKH3vGxqAs3YE6nvqFJ2h7hkOz0VU\nxpRMBV9yY5lzQPUmOgg6a9X61YQoN2HPPFBrRMZxe7xyw2vexKQw0Bks1U2scflI\n9/GAA5Pw2R+4qJSeLi7v/lEWlP4RTXTNqdUCEPimR8FnMGGtlZlXApTTw3o3nm5o\nHhnVs6h04iXIpSChfN4HyxBXabilu6BoekC1uqU/6XIn9ujRHt6e2olnOl8aGJt1\nG0xUzaufm/zBX2CUE/oax8rFanPjw0yUKAJF1Bt62QKBgQD0bjpbS6r6VAkpNAhv\nZE41NzSC3aviI+eCXKyEMN0Rf83jk4xnedCqm/w7Wc/DcXifJVmOiq1CnXB2f3Qj\na1CYt+L2f3vy/dIdQmE+q6sF86xu8lBYz0nKxYPK6sRrN2WTAMo3v11QxKuuWlyw\nCGgx0JBQGPAYXfUaqIcAu3akSwKBgQDkg26WfjYJX9YlCWLDMPkaBMDN0zLhY0On\nOHHcI1n+ZCDJTp1WMlgLbJsDyV1SmWd4kZv5ULEdn+L7Mvk5YCrAjffpW4jCtz2q\nnxvKJ7S4dtXDGlBTNIFMUWANA9wXANxTNRMb0/vIY6Cxgw7smzvkJU4F6K8t+UIC\nSe+g2v9i9wKBgDRovhJ9MvfhtOUkxvo7Y5l9cMDujsA6OpV1EXh2kbAC2z6EkIJP\nWDJ8p6SCKU4asmZNN9qcWXIDF+4QffJqPCnCo+N+ijEbw0WKyhcJ7+2ixcI0Ko4g\nRA46M3v6worKofjXHoS9f2CmCrmjnmQQKWck9Qx3jGNtIfTJVckOaO3pAoGBALyr\nf70li7wFsqt1qmN6pdFDp2TJQbMx4APK6MdXMNCHH0LWc7Vdb7BPBVYFBdZS7klv\n/5XDd9j7z86TcY5bxjChhtTXTH1oCbQ8Fhe83MuI4klqCnQIX9EBRwq36xnbDg5t\nPc+2IKZ9C4pEqSfVq4dc/aSHT0voBwYYwY7QAhhVAoGBAM8A/kbI7i8UvzotgDtA\niDKOX83lEmKxq0lFpts8/RosT/prz3fG7strDfVTZeAyk+F31MXwV0Kwj7bTj5I9\n/qz/OSjNDCsTdkSiOT6HfvwS+jCTnZT91YOy9FROlVAJvFBEIGX3d8pxxZJ1SejG\n8/2bCnXgSbhH6ngzRIwFUU4O\n-----END PRIVATE KEY-----\n",
+  "client_email": "workforce@workforce-211922.iam.gserviceaccount.com",
+  "client_id": "108940323215485861073",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/workforce%40workforce-211922.iam.gserviceaccount.com"
+}
