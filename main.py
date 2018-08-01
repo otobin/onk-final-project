@@ -169,6 +169,7 @@ def parse_resume():
     resume = current_profile.resume.replace('\n','').replace('\r','')
     wordArray = resume.lower().split(' ')
     return wordArray
+    #split resume by line, look for consistency
 
 def find_action_words():
     action_match = {}
