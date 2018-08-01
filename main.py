@@ -69,9 +69,8 @@ class CreateProfile(webapp2.RequestHandler):
         education = self.request.get('education')
         experience = self.request.get('experience')
         industry = self.request.get('industry')
-        resume = self.request.get('resume')
         profile = Profile(email=email, first_name=first_name, last_name=last_name, education=education,
-        experience=experience, industry=industry, resume = resume)
+        experience=experience, industry=industry)
         key = profile.put().urlsafe()
         self.redirect('/profile?key=' + key)
 
@@ -101,7 +100,6 @@ class Update(webapp2.RequestHandler):
         education = self.request.get('education')
         experience = self.request.get('experience')
         industry = self.request.get('industry')
-        resume = self.request.get('resume')
         if first_name != "none":
              profile.first_name = self.request.get("first_name")
         if (education != "none"):
@@ -110,8 +108,6 @@ class Update(webapp2.RequestHandler):
              profile.experience = self.request.get("experience")
         if (industry != "none"):
             profile.industry = self.request.get("industry")
-        if (resume != None):
-            profile.resume = self.request.get("resume")
         key = profile.put().urlsafe()
         self.redirect('/profile?key=' + key)
 
