@@ -80,8 +80,14 @@ class Display_Profile(webapp2.RequestHandler):
         key = ndb.Key(urlsafe=urlsafe_key)
         profile=key.get()
         logging.info(profile)
+        current_user = users.get_current_user()
+        logout_url = users.create_logout_url('/')
+        current_email = current_user.email()
+        current_person = Profile.query().filter(Profile.email == current_email).get()
         templateVars = {
             'profile' : profile,
+            'logout_url': logout_url,
+            'current_person': current_person,
         }
         template = env.get_template('/templates/profile.html')
         self.response.write(template.render(templateVars))
