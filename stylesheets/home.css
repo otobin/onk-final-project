@@ -9,8 +9,8 @@ body{
 }
 
 #title{
-  background-color:#99e1e5;
-  color: #9062a7;
+  background-color:#3E5E7C;
+  color: white;
   padding-right: 70px;
   padding-top: 0.5px;
   padding-bottom: 1px;
@@ -21,7 +21,7 @@ body{
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  background-color: #f2c6b4;
+  background-color: white;
   padding: 0px;
   margin: 0px;
   line-height: 45px;
@@ -32,12 +32,12 @@ body{
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  background-color: #f3e8cb;
+  background-color: #fd5f00;
 
 }
 
 #body{
-  background-color: #fbafaf;
+  background-color: #63ABBA;
   height: 100%;
   width: 100%;
   display: flex;
@@ -66,7 +66,7 @@ a:link, a:visited {
 }
 
 .buttons:hover, a.active{
-    background-color: #fbafaf;
+    background-color: #eeeeee;
     margin: 0px;
     padding-left: 7px;
     padding-right: 7px;
