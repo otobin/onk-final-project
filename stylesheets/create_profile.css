@@ -1,76 +1,99 @@
+body, html {
+  height: 100%;
+  width: 100%;
+}
+
 body{
-  font-family: sans-serif;
+  font-family: 'Montserrat', sans-serif;
   margin: 0;
-  background-color:#7395AE;
-}
-
-h2 {
-  display:flex;
-  text-align: center;
   color: white;
-  font-size: 50px;
 }
 
+#work{
+  color: white;
+  padding-left: 40px;
+  text-align: left;
+  float: left;
+  width: 100%;
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+}
 
-#education {
-  display:flex;
-  flex: 4 4 auto;
+#goldman{
+  margin: 0;
+  padding: 0;
+  text-align: right;
+  float: right;
+  width: 100%;
+  padding-right: 10px;
+}
+
+#title{
+  background-color: #64ACFC;
+  width: 100%;
+  display: flex;
   flex-direction: row;
-  text-align: center;
-  font-size: 30px;
-  border: 1px solid black;
-  padding: 20px;
-  margin: 10px;
-  color: white;
-
+  width: 100%;
 }
 
-
-
-#work {
-  display:flex;
-  flex: 4 4 auto;
+.panel{
+  display: flex;
   flex-direction: row;
-  text-align: center;
-  font-size: 30px;
-  border: 1px solid black;
-  padding: 20px;
-  margin: 10px;
-  color: white;
+  justify-content: space-around;
+  background-color: #98C6F4;
+  padding: 0px;
+  margin: 0px;
+  line-height: 45px;
+  height: 45px;
 }
 
-#industry {
-  display:flex;
-  flex: 4 4 auto;
+#log{
+  display: flex;
   flex-direction: row;
-  text-align: center;
-  font-size: 30px;
-  border: 1px solid black;
-  padding: 20px;
-  margin: 10px;
-  color: white;
+  justify-content: space-around;
+  background-color: #f3e8cb;
+
 }
 
-#resume {
-  display:flex;
-  flex: 4 4 auto;
+#body{
+  background-color: #64C3AC;
+  height: 100%;
+  width: 100%;
+  display: flex;
   flex-direction: row;
-  text-align: center;
-  font-size: 30px;
-  border: 1px solid black;
-  padding: 20px;
-  margin: 10px;
-  color: white;
 }
 
-#create {
-  display:flex;
-  flex: 4 4 auto;
-  flex-direction: row;
-  text-align: center;
-  font-size: 30px;
-  border: 1px solid black;
-  padding: 20px;
-  margin: 10px;
-  color: white;
+#content {
+  width: 100%;
+  padding-left: 50px;
+  font-size: 20px;
 }
+
+
+#picture{
+  width: 100%;
+}
+
+#header {
+  font-size: 25px;
+}
+
+a:link, a:visited {
+    color: black;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.buttons:hover, a.active{
+    background-color: #63ABBA;
+    margin: 0px;
+    padding-left: 7px;
+    padding-right: 7px;
+    transition: .4s;
+}
+
+/* a:hover, a:active {
+    background-color: #fbafaf;
+} */

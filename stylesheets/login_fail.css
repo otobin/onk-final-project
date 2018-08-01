@@ -1,0 +1,75 @@
+body, html {
+  height: 100%;
+  width: 100%;
+}
+
+body{
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+}
+
+#title{
+  background-color: #64ACFC;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+#work{
+  color: white;
+  padding-left: 40px;
+  text-align: left;
+  float: left;
+  width: 100%;
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+
+#goldman{
+  margin: 0;
+  padding: 0;
+  text-align: right;
+  float: right;
+  width: 100%;
+  padding-right: 10px;
+}
+
+#body{
+  background-color: #04BBF3;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+}
+
+#content{
+  font-size: 22px;
+  color: white;
+  padding-left: 50px;
+  padding-right: 50px;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+#xx{
+  display: flex;
+  flex-direction: row;
+  padding-left: 380px;
+}
+
+a:link, a:visited {
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.button:hover, a.active{
+    background-color: #4A388D;
+    margin: 0px;
+    padding-left: 7px;
+    padding-right: 7px;
+    transition: .35s;
+}
