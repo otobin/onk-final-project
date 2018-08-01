@@ -23,7 +23,7 @@ class Profile(ndb.Model):
     #suggested_jobs = ndb.ListProperty()
     resume = ndb.BlobProperty()
 
-dead_words = ['is', 'are,' 'was,' 'were,' 'am,' 'has,' 'have,' 'had,' 'be,' 'been,' 'look,' 'take,' 'took,' 'make,' 'run,' 'ran,' 'go,' 'went,' 'gone,' 'do,' 'did,' 'came,' 'come', 'helped']
+dead_words = ['is', 'are', 'was', 'were', 'am', 'has', 'have', 'had', 'be', 'been', 'look', 'take', 'took', 'make', 'run', 'ran', 'go', 'went', 'gone', 'do', 'did', 'came', 'come', 'helped']
 
 action_words = ['Achieved', 'improved', 'trained', 'maintained', 'mentored', 'managed', 'created', 'resolved', 'volunteered', 'influence', 'increased', 'decreased', 'ideas', 'launched', 'revenue', 'profits', 'under budget', 'won']
 
@@ -35,35 +35,26 @@ class MainPage(webapp2.RequestHandler):
         login_url = users.create_login_url('/')
         logout_url = users.create_logout_url('/')
         create_account = users.create_login_url('/create')
-        current_person = ''
+        current_person = None
         current_user = users.get_current_user()
-        if not current_user:
-            current_user = None
-            templateVars = {
-                'login_url': login_url,
-                'current_user': current_user,
-                'logout_url': logout_url,
-                'create_account': create_account,
-                'current_person': current_person,
-            }
-            template = env.get_template('templates/home.html')
-            self.response.write(template.render(templateVars))
-        else:
+        # if not current_user:
+        #     current_user = None
+        # else:
+        if current_user:
             current_email = current_user.email()
             #pinpoints the right account for the person who just logged in
-            if Profile.query().filter(Profile.email == current_email).get():
-                current_person = Profile.query().filter(Profile.email == current_email).get()
-                templateVars = {
-                    'login_url': login_url,
-                    'current_user': current_user,
-                    'logout_url': logout_url,
-                    'create_account': create_account,
-                    'current_person': current_person,
-                }
-                template = env.get_template('templates/home.html')
-                self.response.write(template.render(templateVars))
-            else:
+            current_person = Profile.query().filter(Profile.email == current_email).get()
+            if not current_person:
                 self.redirect('/fail')
+        templateVars = {
+            'login_url': login_url,
+            'current_user': current_user,
+            'logout_url': logout_url,
+            'create_account': create_account,
+            'current_person': current_person,
+        }
+        template = env.get_template('templates/home.html')
+        self.response.write(template.render(templateVars))
 
 
 class CreateProfile(webapp2.RequestHandler):
@@ -101,30 +92,46 @@ class Display_Profile(webapp2.RequestHandler):
 class Update(webapp2.RequestHandler):
     def get(self):
         template = env.get_template("/templates/update_profile.html")
-        self.response.write(template)
+        self.response.write(template.render())
     def post(self):
+        current_email = users.get_current_user().email()
         profile = Profile.query().filter(Profile.email == current_email).get()
-        if (profile.email != "None"):
-            profile.email = self.request.get("email")
-        if (profile.education != "None"):
-            profile.education = self.request.get("education")
-        if (profile.experience != "None"):
-            profile.experience = self.request.get("experience")
-        if (profile.industry != "None"):
+        first_name = self.request.get('first_name')
+        last_name = self.request.get('last_name')
+        education = self.request.get('education')
+        experience = self.request.get('experience')
+        industry = self.request.get('industry')
+        resume = self.request.get('resume')
+        if first_name != "None":
+             profile.first_name = self.request.get("first_name")
+        if (education != "None"):
+             profile.education = self.request.get("education")
+        if (experience != "None"):
+             profile.experience = self.request.get("experience")
+        if (industry != "None"):
             profile.industry = self.request.get("industry")
-        if (profile.resume != None):
-            profile.resume = self.requet.get("resume")
+        if (resume != None):
+            profile.resume = self.request.get("resume")
+        key = profile.put().urlsafe()
+        self.redirect('/profile?key=' + key)
 
+<<<<<<< HEAD
+=======
+class ResumeReview(webapp2.RequestHandler):
+    def get(self):
+        template = env.get_template("templates/resume_upload.html")
+        self.response.write(template.render())
 
-
+>>>>>>> d607ea6de107c081445127eaf87bbb26dc94f451
 class ResumeUpload(webapp2.RequestHandler):
     def post(self):
         resume = self.request.get('resume')
         current_user = users.get_current_user()
         current_profile = Profile.query().filter(Profile.email == current_user.email()).get()
         current_profile.resume = resume
+        print 'test'
         current_profile.put()
-        self.redirect('/resume?key=' + current_profile.key.urlsafe())
+        self.redirect('/')
 
 class ResumeHandler(webapp2.RequestHandler):
     def get(self):
@@ -144,7 +151,7 @@ class Login_Fail(webapp2.RequestHandler):
         template = env.get_template('/templates/login_fail.html')
         self.response.write(template.render(templateVar))
 
-class printAdvice(webapp2.RequestHandler):
+class ResumeAdvice(webapp2.RequestHandler):
     def get(self):
         dead_match = find_dead_words()
         action_match = find_action_words()
@@ -153,38 +160,29 @@ class printAdvice(webapp2.RequestHandler):
             'dead_match' : dead_match,
             'action_match' : action_match
         }
-        template = env.get_template('templates/resume_advice')
+        template = env.get_template('templates/resume_advice.html')
         self.response.write(template.render(templateVars))
+
 
 def parse_resume():
     current_user = users.get_current_user()
-    current_profile = Profile.query().get()
-    resume = current_profile.resume
-
-    content = ' '.join(resume)#.replace('\n','').replace('\r','').lower()
-
-    print content
-    words = {}
-    wordArray = content.split(" ")
-
-    print wordArray
-    for word in wordArray:
-        if (word in words and word is not ''):
-            words[word] += 1
-        else:
-            words[word] = 1
-
-    return words
+    current_email = current_user.email()
+    current_profile = Profile.query().filter(Profile.email == current_email).get()
+    resume = current_profile.resume.replace('\n','').replace('\r','')
+    wordArray = resume.lower().split(' ')
+    return wordArray
 
 def find_action_words():
     action_match = {}
     words = parse_resume()
+    print words
     for word in words:
         for action_word in action_words:
-            if word == action_word and word not in match:
+            if word == action_word and word not in action_match:
                 action_match[word] = 1
             elif word == action_word:
                 action_match[word] += 1
+    print dead_words
     return action_match
 
 def find_dead_words():
@@ -192,10 +190,11 @@ def find_dead_words():
     words = parse_resume()
     for word in words:
         for dead_word in dead_words:
-            if word == dead_word and word not in match:
+            if word == dead_word and word not in dead_match:
                 dead_match[word] = 1
             elif word == dead_word:
                 dead_match[word] += 1
+    print dead_match
     return dead_match
 
 
@@ -203,9 +202,10 @@ app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/create', CreateProfile),
     ('/profile', Display_Profile),
+    ('/resume_review', ResumeReview),
+    ('/resume_advice', ResumeAdvice),
     ('/upload_resume', ResumeUpload),
     ('/resume', ResumeHandler),
-    ('/advice', printAdvice),
     ('/fail', Login_Fail),
-    ('update', Update)
+    ('/update', Update)
 ], debug=True)
