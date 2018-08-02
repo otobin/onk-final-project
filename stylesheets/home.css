@@ -24,8 +24,8 @@ body{
   padding: 0;
   text-align: right;
   float: right;
-  width: 100%;
-  padding-right: 10px;
+  width: auto;
+  padding-right: 0;
 }
 
 #title{
