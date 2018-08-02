@@ -133,15 +133,15 @@ class Update_Profile(webapp2.RequestHandler):
 
 class ResumeUpload(webapp2.RequestHandler):
     def get(self):
-        urlsafe_key = self.request.get('key')
-        key = ndb.Key(urlsafe=urlsafe_key)
-        profile=key.get()
+        # urlsafe_key = self.request.get('key')
+        # key = ndb.Key(urlsafe=urlsafe_key)
+        # profile= key.get()
         current_user = users.get_current_user()
         logout_url = users.create_logout_url('/')
         current_email = current_user.email()
         current_person = Profile.query().filter(Profile.email == current_email).get()
         templateVars = {
-            'profile' : profile,
+            # 'profile' : profile,
             'logout_url': logout_url,
             'current_person': current_person,
         }
@@ -268,7 +268,7 @@ def analyze_entities():
              headers=headers
         )
 
-        placeindex = -1
+        checkorder = 0
         job_line = 0
         if result.status_code == 200:
             j = json.loads(result.content)
@@ -277,20 +277,17 @@ def analyze_entities():
                 type_list.append(j['entities'][i]['type'])
             for type in type_list:
                 #print type
-                currentindex = type_list.index(type)
-                print currentindex
-                print 'test'
-                print placeindex
-                if type == 'PERSON' and currentindex > placeindex:
-                    placeindex = currentindex
+                if type == 'PERSON' and checkorder == 0:
+                    checkorder = 1
                     job_line += 1
-                elif type == 'ORGANIZATION' or type == 'OTHER' and currentindex > placeindex:
-                    placeindex = currentindex
+                    print checkorder
+                elif type == 'ORGANIZATION' or type == 'OTHER' and checkorder == 1:
+                    checkorder = 2
                     job_line += 1
-                elif type == 'LOCATION' and currentindex > placeindex:
-                    placeindex = currentindex
+                elif type == 'LOCATION' and checkorder == 2:
                     job_line += 1
-                    joblines.append(linenum + 1)
+            if job_line >= 3:
+                joblines.append(linenum + 1)
         else:
             msg = 'Error accessing insight API:'+str(result.status_code)+" "+str(result.content)
         linenum += 1
