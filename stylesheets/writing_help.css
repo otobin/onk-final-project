@@ -68,13 +68,19 @@ a:link, a:visited {
   color: white;
   height: 100%;
   weight: 100%;
-  padding: 40px;
-  font-size: 20px;
+  padding-top: 30px;
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+  align-items: stretch;
 }
 .content{
   height: 100%;
   weight: 100%;
+  margin: auto;
+  line-height: 29px;
+  margin: 0px;
+  flex: 1;
+  text-align: center;
+  font-size: 18px;
 }

@@ -111,8 +111,13 @@ class Display_Profile(webapp2.RequestHandler):
 
 class Update_Profile(webapp2.RequestHandler):
     def get(self):
+        current_user = users.get_current_user()
+        current_email = current_user.email()
         template = env.get_template("/templates/update_profile.html")
-        self.response.write(template.render())
+        templateVars = {
+            "current_person": Profile.query().filter(Profile.email == current_email).get()
+        }
+        self.response.write(template.render(templateVars))
     def post(self):
         current_email = users.get_current_user().email()
         profile = Profile.query().filter(Profile.email == current_email).get()
