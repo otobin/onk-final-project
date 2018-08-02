@@ -5,6 +5,7 @@ import StringIO
 import json
 import urllib
 import logging
+import time
 
 from google.appengine.ext import ndb
 from google.appengine.api import users
@@ -32,9 +33,14 @@ class Profile(ndb.Model):
     #suggested_jobs = ndb.ListProperty()
     resume = ndb.BlobProperty()
 
-dead_words = ['is', 'are', 'was', 'were', 'am', 'has', 'have', 'had', 'be', 'been', 'look', 'take', 'took', 'make', 'run', 'ran', 'go', 'went', 'gone', 'do', 'did', 'came', 'come', 'helped']
+dead_words = {
+    'is': None, 'are': None, 'was': None, 'were': None, 'am': None, 'has': None, 'have': None, 'had': None, 'be': None, 'been': None, 'look': None, 'take': None,
+    'took': None, 'run': None, 'ran': None, 'go': None, 'went': None, 'gone': None, 'do': None, 'did': None, 'came': None, 'come': None, 'helped': None
+    }
 
-action_words = ['achieved', 'improved', 'trained', 'maintained', 'mentored', 'managed', 'created', 'resolved', 'volunteered', 'influence', 'increased', 'decreased', 'ideas', 'launched', 'revenue', 'profits', 'under budget', 'won']
+action_words = {'achieved': None, 'improved': None, 'trained': None, 'maintained': None, 'mentored': None, 'managed': None, 'created': None, 'resolved': None, 'volunteered': None, 'influence': None, 'increased': None, 'decreased': None,
+    'launched': None, 'revenue': None, 'profits': None, 'under budget': None, 'won': None, 'designed': None, 'implemented': None, 'administered': None, 'resolved': None, 'monitored': None
+    }
 
 
 class MainPage(webapp2.RequestHandler):
@@ -154,6 +160,7 @@ class ResumeUpload(webapp2.RequestHandler):
         resume = self.request.get('resume')
         profile.resume = resume
         profile.put()
+        print(time.time())
         self.redirect('/resume_advice')
 
 class ResumeHandler(webapp2.RequestHandler):
@@ -189,16 +196,22 @@ class ResumeAdvice(webapp2.RequestHandler):
         dead_match = find_dead_words()
         print dead_match
         action_match = find_action_words()
-        job_description = analyze_entities()
+        if current_person.experience != 'None':
+            job_descriptions = analyze_entities()
+        categories = getCategories(classify_url)
+        sentiment = getSentiment(sentiment_url)
         templateVars = {
             'dead_match' : dead_match,
             'action_match' : action_match,
             'logout_url': logout_url,
             'current_person': current_person,
-            'job_description' : job_description
+            'job_descriptions' : job_descriptions,
+            'categories': categories,
+            'sentiment': sentiment,
         }
         template = env.get_template('templates/resume_advice.html')
         self.response.write(template.render(templateVars))
+        print(time.time())
 
 
 def parse_resume(type):
@@ -217,13 +230,16 @@ def find_action_words():
     words = parse_resume(' ')
     action_count = 0
     for word in words:
-        for action_word in action_words:
-            if word == action_word and word not in action_match:
-                action_match[word] = 1
-                action_count += 1
-            elif word == action_word:
-                action_match[word] += 1
-                action_count += 1
+        if word in action_words:
+            for action_word in action_words:
+                if word == action_word and word not in action_match:
+                    action_match[word] = 1
+                    action_count += 1
+                elif word == action_word:
+                    action_match[word] += 1
+                    action_count += 1
+        else:
+            pass
     action_match['count'] = action_count
     return action_match
 
@@ -232,22 +248,23 @@ def find_dead_words():
     words = parse_resume(' ')
     dead_count = 0
     for word in words:
-        for dead_word in dead_words:
-            if word == dead_word and word not in dead_match:
-                dead_match[word] = 1
-                dead_count += 1
-            elif word == dead_word:
-                dead_match[word] += 1
-                dead_count += 1
+        if word in dead_words:
+            for dead_word in dead_words:
+                if word == dead_word and word not in dead_match:
+                    dead_match[word] = 1
+                    dead_count += 1
+                elif word == dead_word:
+                    dead_match[word] += 1
+                    dead_count += 1
+        else:
+            pass
     dead_match['count'] = dead_count
     return dead_match
 
 def analyze_entities():
     resume = parse_resume('\n')
     linenum = 0
-
-    # for line in resume:
-    #     print line
+    joblines = []
 
     for resume_line in resume:
         data = {
@@ -271,14 +288,11 @@ def analyze_entities():
 
         placeindex = -1
         job_line = 0
-        print 'test'
         if result.status_code == 200:
             j = json.loads(result.content)
             type_list = []
             for i in range(len(j['entities'])):
-                print j['entities']
                 type_list.append(j['entities'][i]['type'])
-                print j['entities'][i]['type']
             for type in type_list:
                 #print type
                 currentindex = type_list.index(type)
@@ -291,17 +305,77 @@ def analyze_entities():
                 elif type == 'LOCATION' and currentindex > placeindex:
                     placeindex = currentindex
                     job_line += 1
-                    jobline = linenum
+                    joblines.append(linenum + 1)
         else:
             msg = 'Error accessing insight API:'+str(result.status_code)+" "+str(result.content)
-            print msg
         linenum += 1
 
         #print job_line
-    if job_line >= 3:
-        return jobline
+    if len(joblines) > 0:
+        return joblines
     else:
         return 0
+
+
+def getCategories(url): #url is unique to categories function in api
+    current_user = users.get_current_user()
+    current_email = current_user.email()
+    current_profile = Profile.query().filter(Profile.email == current_email).get()
+    resume = current_profile.resume
+    data = {
+     "document": {
+        "type": "PLAIN_TEXT",
+        "language": "EN",
+        "content": resume,
+      }
+    }
+    headers = {
+    "Content-Type" : "application/json; charset=utf-8"
+    }
+    jsondata = json.dumps(data)
+    result = urlfetch.fetch(url, method=urlfetch.POST, payload=data,headers=headers)
+    python_result = json.loads(result.content)
+    string = ""
+    for i in range(0, len(python_result["categories"])):
+         string += "Your resume indicates the "
+         string += python_result["categories"][i]["name"]
+         string += " category with a "
+         string += str(python_result["categories"][i]["confidence"])
+         string += " level of confidence. \n"
+    return string
+
+
+
+
+def getSentiment(url): #url is unique to sentiment function in api
+    current_user = users.get_current_user()
+    current_email = current_user.email()
+    current_profile = Profile.query().filter(Profile.email == current_email).get()
+    resume = current_profile.resume
+    data = {
+        "document": {
+        "type": "PLAIN_TEXT",
+        "language": "EN",
+        "content": resume,
+      },
+      "encodingType": "UTF32",
+    }
+    headers = {
+    "Content-Type" : "application/json; charset=utf-8"
+        }
+    jsondata = json.dumps(data)
+    result = urlfetch.fetch(url, method=urlfetch.POST, payload=data,headers=headers)
+    python_result = json.loads(result.content)
+    string = ""
+    magnitude = python_result["documentSentiment"]["magnitude"]
+    score = python_result["documentSentiment"]["score"]
+    if (score < 0.0):
+        string = "Your resume has a " + str(score) + " score  and a " + str(magnitude) + " magnitude. This reads as negative"
+    elif (score > 0.0 and score < .5):
+        string = "Your resume has a " + str(score) + " score  and a " + str(magnitude) + " magnitude. This reads as neutral"
+    elif (score > .5):
+        string = "Your resume has a " + str(score) + " score  and a " + str(magnitude) + " magnitude. This reads as positive"
+    return string
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
