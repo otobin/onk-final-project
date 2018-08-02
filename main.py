@@ -188,7 +188,7 @@ class ResumeAdvice(webapp2.RequestHandler):
             'dead_match' : dead_match,
             'action_match' : action_match,
             'logout_url': logout_url,
-            'current_person': current_person,            
+            'current_person': current_person,
             'job_description' : job_description
         }
         template = env.get_template('templates/resume_advice.html')
@@ -265,14 +265,11 @@ def analyze_entities():
 
         placeindex = -1
         job_line = 0
-        print 'test'
         if result.status_code == 200:
             j = json.loads(result.content)
             type_list = []
             for i in range(len(j['entities'])):
-                print j['entities']
                 type_list.append(j['entities'][i]['type'])
-                print j['entities'][i]['type']
             for type in type_list:
                 #print type
                 currentindex = type_list.index(type)
@@ -288,7 +285,6 @@ def analyze_entities():
                     jobline = linenum
         else:
             msg = 'Error accessing insight API:'+str(result.status_code)+" "+str(result.content)
-            print msg
         linenum += 1
 
         #print job_line
