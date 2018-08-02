@@ -4,6 +4,7 @@ import os
 import StringIO
 import json
 import urllib
+import logging
 
 from google.appengine.ext import ndb
 from google.appengine.api import users
@@ -33,7 +34,7 @@ class Profile(ndb.Model):
 
 dead_words = ['is', 'are', 'was', 'were', 'am', 'has', 'have', 'had', 'be', 'been', 'look', 'take', 'took', 'make', 'run', 'ran', 'go', 'went', 'gone', 'do', 'did', 'came', 'come', 'helped']
 
-action_words = ['Achieved', 'improved', 'trained', 'maintained', 'mentored', 'managed', 'created', 'resolved', 'volunteered', 'influence', 'increased', 'decreased', 'ideas', 'launched', 'revenue', 'profits', 'under budget', 'won']
+action_words = ['achieved', 'improved', 'trained', 'maintained', 'mentored', 'managed', 'created', 'resolved', 'volunteered', 'influence', 'increased', 'decreased', 'ideas', 'launched', 'revenue', 'profits', 'under budget', 'won']
 
 
 class MainPage(webapp2.RequestHandler):
@@ -176,9 +177,11 @@ class ResumeAdvice(webapp2.RequestHandler):
     def get(self):
         dead_match = find_dead_words()
         action_match = find_action_words()
+        job_description = analyze_entities()
         templateVars = {
             'dead_match' : dead_match,
-            'action_match' : action_match
+            'action_match' : action_match,
+            'job_description' : job_description
         }
         template = env.get_template('templates/resume_advice.html')
         self.response.write(template.render(templateVars))
@@ -189,8 +192,9 @@ def parse_resume(type):
     current_email = current_user.email()
     current_profile = Profile.query().filter(Profile.email == current_email).get()
     resume = current_profile.resume
-    resume = resume.replace('\n','').replace('\r','')
-    wordArray = resume.lower().split(type)
+    if type is ' ' :
+        resume = resume.replace('\n','').replace('\r','').lower()
+    wordArray = resume.split(type)
     return wordArray
     #split resume by line, look for consistency
 
@@ -198,7 +202,6 @@ def find_action_words():
     action_match = {}
     words = parse_resume(' ')
     action_count = 0
-    print words
     for word in words:
         for action_word in action_words:
             if word == action_word and word not in action_match:
@@ -208,7 +211,6 @@ def find_action_words():
                 action_match[word] += 1
                 action_count += 1
     action_match['count'] = action_count
-    print dead_words
     return action_match
 
 def find_dead_words():
@@ -224,27 +226,66 @@ def find_dead_words():
                 dead_match[word] += 1
                 dead_count += 1
     dead_match['count'] = dead_count
-    print dead_match
     return dead_match
 
-def analyze_entities(resume):
+def analyze_entities():
+    resume = parse_resume('\n')
+    print resume[0]
+    print resume[1]
+    line = 0
 
-    data = {
-     "document": {
-        "type": "PLAIN_TEXT",
-        "language": "EN",
-        "content": resume,
-      },
-      "encodingType": "UTF8",
-    }
+    for resume_line in resume:
+        data = {
+         "document": {
+            "type": "PLAIN_TEXT",
+            "language": "EN",
+            "content": resume_line,
+          },
+          "encodingType": "UTF8",
+        }
 
-    headers = {
-        "Content-Type" : "application/json; charset=utf-8"
-    }
+        headers = {
+            "Content-Type" : "application/json; charset=utf-8"
+        }
 
-    jsondata = json.dumps(data)
+        result = urlfetch.fetch(entities_url,
+             method=urlfetch.POST,
+             payload=data,
+             headers=headers
+        )
 
+        placeindex = -1
+        job_line = 0
+        if result.status_code == 200:
+            j = json.loads(result.content)
+            type_list = []
+            for i in range(len(j['entities'])):
+                type_list.append(j['entities'][i]['type'])
+                print j['entities'][i]['type']
+            for type in type_list:
+                #print type
+                currentindex = type_list.index(type)
+                if type == 'PERSON' and currentindex > placeindex:
+                    placeindex = currentindex
+                    job_line += 1
+                elif type == 'ORGANIZATION' and currentindex > placeindex:
+                    placeindex = currentindex
+                    job_line += 1
+                elif type == 'LOCATION' and currentindex > placeindex:
+                    placeindex = currentindex
+                    job_line += 1
+        else:
+            msg = 'Error accessing insight API:'+str(result.status_code)+" "+str(result.content)
+            print msg
+        line += 1
 
+        print job_line
+        if job_line >= 3:
+            return True
+        else:
+            return False
+
+analyze_entities()
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),

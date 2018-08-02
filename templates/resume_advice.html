@@ -1,4 +1,4 @@
-<h3>Action Words:</h3> <br>
+<h3>Action Words:</h3>
 {% for word in action_match %}
   {% if word != 'count' %}
     You used '{{word}}' {{action_match[word]}} times <br>
@@ -15,11 +15,11 @@
 
 <br><br>
 
-<h3>Dead Words:</h3><br>
+<h3>Dead Words:</h3>
 {% for word in dead_match %}
   {% if word != 'count' %}
     You used '{{word}}' {{dead_match[word]}} times <br>
-  {% endif %} 
+  {% endif %}
 {% endfor %}
 
 {% if dead_match['count'] < 3 %}
@@ -28,4 +28,13 @@
   You used some dead words.  Try to use more specific words.
 {% else %}
   You used a lot of dead words. Refer to the list of key words on the advice page.
+{% endif %}
+
+<br><br>
+
+<h3>Job Description</h3>
+{% if job_description %}
+  You correctly formatted a job description. Good job!
+{% else %}
+  You don't have a well-formatted job description. Check the advice page for more information.
 {% endif %}
