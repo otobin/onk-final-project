@@ -135,13 +135,9 @@ class Update_Profile(webapp2.RequestHandler):
 
 class ResumeUpload(webapp2.RequestHandler):
     def get(self):
-<<<<<<< HEAD
         # urlsafe_key = self.request.get('key')
         # key = ndb.Key(urlsafe=urlsafe_key)
         # profile=key.get()
-=======
-
->>>>>>> 2b4626da2079ebf63793a07f835abb5935964ec0
         current_user = users.get_current_user()
         logout_url = users.create_logout_url('/')
         current_email = current_user.email()
