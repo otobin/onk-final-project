@@ -184,12 +184,16 @@ class ResumeAdvice(webapp2.RequestHandler):
         print dead_match
         action_match = find_action_words()
         job_descriptions = analyze_entities()
+        categories = getCategories(classify_url)
+        sentiment = getSentiment(sentiment_url)
         templateVars = {
             'dead_match' : dead_match,
             'action_match' : action_match,
             'logout_url': logout_url,
             'current_person': current_person,
             'job_descriptions' : job_descriptions
+            'categories': categories,
+            'sentiment': sentiment,
         }
         template = env.get_template('templates/resume_advice.html')
         self.response.write(template.render(templateVars))
@@ -294,11 +298,15 @@ def analyze_entities():
 
 
 def getCategories(url): #url is unique to categories function in api
+    current_user = users.get_current_user()
+    current_email = current_user.email()
+    current_profile = Profile.query().filter(Profile.email == current_email).get()
+    resume = current_profile.resume
     data = {
      "document": {
         "type": "PLAIN_TEXT",
         "language": "EN",
-        "content": "Google, headquartered in Mountain View, unveiled the new Android phone at the Consumer Electronic Show. Sundar Pichai said in his keynote that users love their new Android phones."
+        "content": resume,
       }
     }
     headers = {
@@ -315,17 +323,21 @@ def getCategories(url): #url is unique to categories function in api
          string += str(python_result["categories"][i]["confidence"])
          string += " level of confidence. \n"
     return string
-print(getCategories(url))
+
 
 
 
 
 def getSentiment(url): #url is unique to sentiment function in api
+    current_user = users.get_current_user()
+    current_email = current_user.email()
+    current_profile = Profile.query().filter(Profile.email == current_email).get()
+    resume = current_profile.resume
     data = {
         "document": {
         "type": "PLAIN_TEXT",
         "language": "EN",
-        "content": "Google, headquartered in Mountain View, unveiled the new Android phone at the Consumer Electronic Show. Sundar Pichai said in his keynote that users love their new Android phones."
+        "content": resume,
       },
       "encodingType": "UTF32",
     }
