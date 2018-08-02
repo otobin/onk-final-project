@@ -207,7 +207,6 @@ def find_dead_words():
     return dead_match
 
 
-
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/create', CreateProfile),
