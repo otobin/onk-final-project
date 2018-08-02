@@ -328,7 +328,6 @@ def getCategories(url): #url is unique to categories function in api
 
 
 
-
 def getSentiment(url): #url is unique to sentiment function in api
     current_user = users.get_current_user()
     current_email = current_user.email()
