@@ -183,13 +183,17 @@ class ResumeAdvice(webapp2.RequestHandler):
         dead_match = find_dead_words()
         print dead_match
         action_match = find_action_words()
-        job_description = analyze_entities()
+        job_descriptions = analyze_entities()
+        categories = getCategories(classify_url)
+        sentiment = getSentiment(sentiment_url)
         templateVars = {
             'dead_match' : dead_match,
             'action_match' : action_match,
             'logout_url': logout_url,
             'current_person': current_person,
-            'job_description' : job_description
+            'job_descriptions' : job_descriptions,
+            'categories': categories,
+            'sentiment': sentiment,
         }
         template = env.get_template('templates/resume_advice.html')
         self.response.write(template.render(templateVars))
@@ -239,9 +243,7 @@ def find_dead_words():
 def analyze_entities():
     resume = parse_resume('\n')
     linenum = 0
-
-    # for line in resume:
-    #     print line
+    joblines = []
 
     for resume_line in resume:
         data = {
@@ -269,8 +271,7 @@ def analyze_entities():
             j = json.loads(result.content)
             type_list = []
             for i in range(len(j['entities'])):
-                type_list.append(j['entities'][i]['type'])
-            for type in type_list:
+                type_list.append(j['entities'][i]['type'])            for type in type_list:
                 #print type
                 currentindex = type_list.index(type)
                 if type == 'PERSON' and currentindex > placeindex:
@@ -282,16 +283,78 @@ def analyze_entities():
                 elif type == 'LOCATION' and currentindex > placeindex:
                     placeindex = currentindex
                     job_line += 1
-                    jobline = linenum
+                    joblines.append(linenum + 1)
         else:
             msg = 'Error accessing insight API:'+str(result.status_code)+" "+str(result.content)
         linenum += 1
 
         #print job_line
-    if job_line >= 3:
-        return jobline
+    if len(joblines) > 0:
+        return joblines
     else:
         return 0
+
+
+def getCategories(url): #url is unique to categories function in api
+    current_user = users.get_current_user()
+    current_email = current_user.email()
+    current_profile = Profile.query().filter(Profile.email == current_email).get()
+    resume = current_profile.resume
+    data = {
+     "document": {
+        "type": "PLAIN_TEXT",
+        "language": "EN",
+        "content": resume,
+      }
+    }
+    headers = {
+    "Content-Type" : "application/json; charset=utf-8"
+    }
+    jsondata = json.dumps(data)
+    result = urlfetch.fetch(url, method=urlfetch.POST, payload=data,headers=headers)
+    python_result = json.loads(result.content)
+    string = ""
+    for i in range(0, len(python_result["categories"])):
+         string += "Your resume indicates the "
+         string += python_result["categories"][i]["name"]
+         string += " category with a "
+         string += str(python_result["categories"][i]["confidence"])
+         string += " level of confidence. \n"
+    return string
+
+
+
+
+
+def getSentiment(url): #url is unique to sentiment function in api
+    current_user = users.get_current_user()
+    current_email = current_user.email()
+    current_profile = Profile.query().filter(Profile.email == current_email).get()
+    resume = current_profile.resume
+    data = {
+        "document": {
+        "type": "PLAIN_TEXT",
+        "language": "EN",
+        "content": resume,
+      },
+      "encodingType": "UTF32",
+    }
+    headers = {
+    "Content-Type" : "application/json; charset=utf-8"
+        }
+    jsondata = json.dumps(data)
+    result = urlfetch.fetch(url, method=urlfetch.POST, payload=data,headers=headers)
+    python_result = json.loads(result.content)
+    string = ""
+    magnitude = python_result["documentSentiment"]["magnitude"]
+    score = python_result["documentSentiment"]["score"]
+    if (score < 0.0):
+        string = "Your resume has a " + str(score) + " score  and a " + str(magnitude) + " magnitude. This reads as negative"
+    elif (score > 0.0 and score < .5):
+        string = "Your resume has a " + str(score) + " score  and a " + str(magnitude) + " magnitude. This reads as neutral"
+    elif (score > .5):
+        string = "Your resume has a " + str(score) + " score  and a " + str(magnitude) + " magnitude. This reads as positive"
+    return string
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
