@@ -135,7 +135,6 @@ class Update_Profile(webapp2.RequestHandler):
 
 class ResumeUpload(webapp2.RequestHandler):
     def get(self):
-
         current_user = users.get_current_user()
         logout_url = users.create_logout_url('/')
         current_email = current_user.email()
@@ -176,8 +175,16 @@ class Login_Fail(webapp2.RequestHandler):
 
 class Tips(webapp2.RequestHandler):
     def get(self):
+        current_user = users.get_current_user()
+        logout_url = users.create_logout_url('/')
+        current_email = current_user.email()
+        current_person = Profile.query().filter(Profile.email == current_email).get()
+        templateVars = {
+            'logout_url': logout_url,
+            'current_person': current_person,
+        }
         template = env.get_template('templates/writing_help.html')
-        self.response.write(template.render())
+        self.response.write(template.render(templateVars))
 
 
 class ResumeAdvice(webapp2.RequestHandler):
@@ -368,11 +375,11 @@ def getSentiment(url): #url is unique to sentiment function in api
     magnitude = python_result["documentSentiment"]["magnitude"]
     score = python_result["documentSentiment"]["score"]
     if (score < 0.0):
-        string = "Your resume has a " + str(score) + " score  and a " + str(magnitude) + " magnitude. This reads as negative"
+        string = "Your resume has a score of " + str(score) + " out of 1  and a magnitude of " + str(magnitude) + ", which measures the strengh of emotion. This reads as negative"
     elif (score > 0.0 and score < .5):
-        string = "Your resume has a " + str(score) + " score  and a " + str(magnitude) + " magnitude. This reads as neutral"
+        string = "Your resume has a score of " + str(score) + " out of 1  and a magnitude of " + str(magnitude) + ", which measures the strengh of emotion. This reads as neutral"
     elif (score > .5):
-        string = "Your resume has a " + str(score) + " score  and a " + str(magnitude) + " magnitude. This reads as positive"
+        string = "Your resume has a score of " + str(score) + " out of 1 and a magnitude of " + str(magnitude) + ", which measures the strengh of emotion. This reads as positive"
     return string
 
 app = webapp2.WSGIApplication([

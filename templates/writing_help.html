@@ -2,7 +2,7 @@
 <title>WorkForce</title>
 <link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet">
-<link rel="stylesheet" href="/stylesheets/home.css"/>
+<link rel="stylesheet" href="/stylesheets/writing_help.css"/>
 
 <div id="title">
   <div id="work">
@@ -15,8 +15,35 @@
   </div>
 </div>
 
+<div class="panel">
+  <div class="buttons">
+    <a href="/">Home</a>
+  </div>
+  <div class="buttons">
+    <a href="/profile?key={{current_person.key.urlsafe()}}">Profile</a>
+  </div>
+  <div class="buttons">
+    <a href="/upload_resume?key={{current_person.key.urlsafe()}}">Resume Review</a>
+  </div>
+  <div class="buttons">
+    <a href="/tips?key={{current_person.key.urlsafe()}}">Interview Tips</a>
+  </div>
+  <div class="buttons">
+    <a href="{{logout_url}}">Log out</a>
+  </div>
+</div>
 
 <div id="body">
+  <div class="content">
+    <div style="font-size: 23px">Common Interview Questions:</div>
+      hello
+  </div>
+  <div class="content">
+    hello
+  </div>
+</div>
+
+<!-- <div id="body">
   <div id="questions">
     Common Interview Questions include:
     <br>
@@ -98,4 +125,4 @@
   </div>
   <div id="picture">
   </div>
-</div>
+</div> -->
