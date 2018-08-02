@@ -55,7 +55,7 @@ a:link, a:visited {
 }
 
 .buttons:hover, a.active{
-    background-color: #74CCCC;
+    background-color: #46A3E4;
     margin: 0px;
     padding-left: 10px;
     padding-right: 10px;
@@ -63,29 +63,23 @@ a:link, a:visited {
 }
 
 #body{
-  background-color: #74CCCC;
   height: 100%;
   width: 100%;
+  background-color: #46A3E4;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
 }
 
-#picture{
-  float:right;
-  width: 75%;
-  height: 100%;
-  justify-content: center;
-  padding-left: 20px;
-  padding-top: 15px;
+#image{
+  height: 20%;
+  margin: auto;
 }
 
 #content{
-  float:left;
-  text-align: left;
   width: 100%;
-  line-height: 28px;
-  font-size: 22px;
+  height: 80%;
+  text-align: center;
   color: white;
-  padding-left: 35px;
-  padding-right: 25px;
+  font-size: 25px;
+  line-height: 40px;
 }

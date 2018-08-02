@@ -57,7 +57,7 @@ body{
 #xx{
   display: flex;
   flex-direction: row;
-  padding-left: 380px;
+  justify-content: center;
 }
 
 a:link, a:visited {

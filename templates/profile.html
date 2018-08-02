@@ -23,7 +23,7 @@
     <a href="/profile?key={{current_person.key.urlsafe()}}">Profile</a>
   </div>
   <div class="buttons">
-    Resume Review
+    <a href="/upload_resume?key={{current_person.key.urlsafe()}}">Resume Review</a>
   </div>
   <div class="buttons">
     <a href="{{logout_url}}">Log out</a>
@@ -50,7 +50,3 @@
     <img src="images/profile.jpg" width="600px">
   </div>
 </div>
-
-<form method = "post" action = "/profile">
-  <button id = "update">Update Profile</button>
-</form>

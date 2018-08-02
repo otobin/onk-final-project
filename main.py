@@ -2,10 +2,19 @@ import webapp2
 import jinja2
 import os
 import StringIO
+import json
+import urllib
 import logging
 
 from google.appengine.ext import ndb
 from google.appengine.api import users
+from google.appengine.api import urlfetch
+
+API_KEY = "AIzaSyDCv38dyT92Kalge4L8ibzHFVcLgvtps9Q"
+classify_url = "https://language.googleapis.com/v1/documents:classifyText?key=" + API_KEY
+entities_url = "https://language.googleapis.com/v1/documents:analyzeEntities?key=" + API_KEY
+sentiment_url = "https://language.googleapis.com/v1/documents:analyzeSentiment?key=" + API_KEY
+
 
 env = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -25,7 +34,7 @@ class Profile(ndb.Model):
 
 dead_words = ['is', 'are', 'was', 'were', 'am', 'has', 'have', 'had', 'be', 'been', 'look', 'take', 'took', 'make', 'run', 'ran', 'go', 'went', 'gone', 'do', 'did', 'came', 'come', 'helped']
 
-action_words = ['Achieved', 'improved', 'trained', 'maintained', 'mentored', 'managed', 'created', 'resolved', 'volunteered', 'influence', 'increased', 'decreased', 'ideas', 'launched', 'revenue', 'profits', 'under budget', 'won']
+action_words = ['achieved', 'improved', 'trained', 'maintained', 'mentored', 'managed', 'created', 'resolved', 'volunteered', 'influence', 'increased', 'decreased', 'ideas', 'launched', 'revenue', 'profits', 'under budget', 'won']
 
 
 class MainPage(webapp2.RequestHandler):
@@ -124,14 +133,27 @@ class Update_Profile(webapp2.RequestHandler):
 
 class ResumeUpload(webapp2.RequestHandler):
     def get(self):
-        template = env.get_template("templates/resume_upload.html")
-        self.response.write(template.render())
-    def post(self):
-        resume = self.request.get('resume')
+        urlsafe_key = self.request.get('key')
+        key = ndb.Key(urlsafe=urlsafe_key)
+        profile=key.get()
         current_user = users.get_current_user()
-        current_profile = Profile.query().filter(Profile.email == current_user.email()).get()
-        current_profile.resume = resume
-        current_profile.put()
+        logout_url = users.create_logout_url('/')
+        current_email = current_user.email()
+        current_person = Profile.query().filter(Profile.email == current_email).get()
+        templateVars = {
+            'profile' : profile,
+            'logout_url': logout_url,
+            'current_person': current_person,
+        }
+        template = env.get_template("templates/resume_upload.html")
+        self.response.write(template.render(templateVars))
+    def post(self):
+        current_user = users.get_current_user()
+        current_email = current_user.email()
+        profile = Profile.query().filter(Profile.email == current_email).get()
+        resume = self.request.get('resume')
+        profile.resume = resume
+        profile.put()
         self.redirect('/resume_advice')
 
 class ResumeHandler(webapp2.RequestHandler):
@@ -154,30 +176,40 @@ class Login_Fail(webapp2.RequestHandler):
 
 class ResumeAdvice(webapp2.RequestHandler):
     def get(self):
+        current_user = users.get_current_user()
+        logout_url = users.create_logout_url('/')
+        current_email = current_user.email()
+        current_person = Profile.query().filter(Profile.email == current_email).get()
         dead_match = find_dead_words()
+        print dead_match
         action_match = find_action_words()
+        job_description = analyze_entities()
         templateVars = {
             'dead_match' : dead_match,
-            'action_match' : action_match
+            'action_match' : action_match,
+            'logout_url': logout_url,
+            'current_person': current_person,            
+            'job_description' : job_description
         }
         template = env.get_template('templates/resume_advice.html')
         self.response.write(template.render(templateVars))
 
 
-def parse_resume():
+def parse_resume(type):
     current_user = users.get_current_user()
     current_email = current_user.email()
     current_profile = Profile.query().filter(Profile.email == current_email).get()
     resume = current_profile.resume
-    resume = resume.replace('\n','').replace('\r','')
-    wordArray = resume.lower().split(' ')
+    if type is ' ' :
+        resume = resume.replace('\n','').replace('\r','').lower()
+    wordArray = resume.split(type)
     return wordArray
+    #split resume by line, look for consistency
 
 def find_action_words():
     action_match = {}
-    words = parse_resume()
+    words = parse_resume(' ')
     action_count = 0
-    print words
     for word in words:
         for action_word in action_words:
             if word == action_word and word not in action_match:
@@ -187,12 +219,11 @@ def find_action_words():
                 action_match[word] += 1
                 action_count += 1
     action_match['count'] = action_count
-    print dead_words
     return action_match
 
 def find_dead_words():
     dead_match = {}
-    words = parse_resume()
+    words = parse_resume(' ')
     dead_count = 0
     for word in words:
         for dead_word in dead_words:
@@ -203,10 +234,72 @@ def find_dead_words():
                 dead_match[word] += 1
                 dead_count += 1
     dead_match['count'] = dead_count
-    print dead_match
     return dead_match
 
+def analyze_entities():
+    resume = parse_resume('\n')
+    linenum = 0
 
+    # for line in resume:
+    #     print line
+
+    for resume_line in resume:
+        data = {
+         "document": {
+            "type": "PLAIN_TEXT",
+            "language": "EN",
+            "content": resume_line,
+          },
+          "encodingType": "UTF8",
+        }
+
+        headers = {
+            "Content-Type" : "application/json; charset=utf-8"
+        }
+
+        result = urlfetch.fetch(entities_url,
+             method=urlfetch.POST,
+             payload=data,
+             headers=headers
+        )
+
+        placeindex = -1
+        job_line = 0
+        print 'test'
+        if result.status_code == 200:
+            j = json.loads(result.content)
+            type_list = []
+            for i in range(len(j['entities'])):
+                print j['entities']
+                type_list.append(j['entities'][i]['type'])
+                print j['entities'][i]['type']
+            for type in type_list:
+                #print type
+                currentindex = type_list.index(type)
+                if type == 'PERSON' and currentindex > placeindex:
+                    placeindex = currentindex
+                    job_line += 1
+                elif type == 'ORGANIZATION' or type == 'OTHER' and currentindex > placeindex:
+                    placeindex = currentindex
+                    job_line += 1
+                elif type == 'LOCATION' and currentindex > placeindex:
+                    placeindex = currentindex
+                    job_line += 1
+                    jobline = linenum
+        else:
+            msg = 'Error accessing insight API:'+str(result.status_code)+" "+str(result.content)
+            print msg
+        linenum += 1
+
+<<<<<<< HEAD
+=======
+        #print job_line
+    if job_line >= 3:
+        return jobline
+    else:
+        return 0
+
+>>>>>>> 45455c7c8f444b80a635a81002c090101e7364f7
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/create', CreateProfile),
