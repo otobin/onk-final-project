@@ -174,6 +174,12 @@ class Login_Fail(webapp2.RequestHandler):
         template = env.get_template('/templates/login_fail.html')
         self.response.write(template.render(templateVar))
 
+class Tips(webapp2.RequestHandler):
+    def get(self):
+        template = env.get_template('templates/writing_help.html')
+        self.response.write(template.render())
+
+
 class ResumeAdvice(webapp2.RequestHandler):
     def get(self):
         current_user = users.get_current_user()
@@ -188,7 +194,7 @@ class ResumeAdvice(webapp2.RequestHandler):
             'dead_match' : dead_match,
             'action_match' : action_match,
             'logout_url': logout_url,
-            'current_person': current_person,            
+            'current_person': current_person,
             'job_description' : job_description
         }
         template = env.get_template('templates/resume_advice.html')
@@ -306,5 +312,6 @@ app = webapp2.WSGIApplication([
     ('/upload_resume', ResumeUpload),
     ('/resume', ResumeHandler),
     ('/fail', Login_Fail),
-    ('/update', Update_Profile)
+    ('/update', Update_Profile),
+    ('/tips', Tips),
 ], debug=True)
