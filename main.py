@@ -272,7 +272,8 @@ def analyze_entities():
             j = json.loads(result.content)
             type_list = []
             for i in range(len(j['entities'])):
-                type_list.append(j['entities'][i]['type'])            
+                type_list.append(j['entities'][i]['type'])
+            for type in type_list:          
                 #print type
                 currentindex = type_list.index(type)
                 if type == 'PERSON' and currentindex > placeindex:

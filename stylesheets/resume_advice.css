@@ -22,7 +22,7 @@ body{
   text-align: right;
   float: right;
   width: 100%;
-  padding-right: 10px;
+  padding-right: 0px;
 }
 
 #work{
@@ -55,7 +55,7 @@ a:link, a:visited {
 }
 
 .buttons:hover, a.active{
-    background-color: #46A3E4;
+    background-color: #96D3E8;
     margin: 0px;
     padding-left: 10px;
     padding-right: 10px;
@@ -65,17 +65,29 @@ a:link, a:visited {
 #body{
   height: 100%;
   width: 100%;
-  background-color: #6CA4BD;
+  background-color: #96D3E8;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-content: stretch;
+  align-content: center;
 }
 
 #content{
   width: 100%;
 }
 
+#results{
+  border-style: solid;
+  border-width: 3px;
+  border-color: grey;
+  height: 70%;
+  margin: 14px;
+  margin-left: 18px;
+  margin-top: 18px;
+  background-color: #96D3E8;
+}
+
 #picture{
   width: 100%;
+  align-items: center;
 }
