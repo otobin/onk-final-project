@@ -267,13 +267,12 @@ def analyze_entities():
         )
 
         placeindex = -1
+        job_line = 0
         if result.status_code == 200:
             j = json.loads(result.content)
             type_list = []
             for i in range(len(j['entities'])):
-                type_list.append(j['entities'][i]['type'])
-            job_line = 0
-            for type in type_list:
+                type_list.append(j['entities'][i]['type'])            for type in type_list:
                 #print type
                 currentindex = type_list.index(type)
                 if type == 'PERSON' and currentindex > placeindex:
@@ -288,7 +287,6 @@ def analyze_entities():
                     joblines.append(linenum + 1)
         else:
             msg = 'Error accessing insight API:'+str(result.status_code)+" "+str(result.content)
-            print msg
         linenum += 1
 
         #print job_line
