@@ -210,7 +210,10 @@ def parse_resume(type):
     resume = current_profile.resume
     if type is ' ' :
         resume = resume.replace('\n','').replace('\r','').lower()
-    wordArray = resume.split(type)
+        wordArray = resume.split(type)
+    else:
+        #resume = resume.replace('\r', '\n')
+        wordArray = resume.split(type)
     return wordArray
     #split resume by line, look for consistency
 
@@ -252,7 +255,7 @@ def find_dead_words():
 
 def analyze_entities():
     resume = parse_resume('\n')
-    linenum = 0
+    linenum = 1
     joblines = []
 
     for resume_line in resume:
@@ -282,22 +285,19 @@ def analyze_entities():
             type_list = []
             for i in range(len(j['entities'])):
                 type_list.append(j['entities'][i]['type'])
+            print j
 
             for type in type_list:
-                currentindex = type_list.index(type)
                 if type == 'PERSON' and checkorder == 0:
                     checkorder += 1
                     job_line += 1
-                    print checkorder
                 elif type == 'ORGANIZATION' or type == 'OTHER' and checkorder == 1:
                     checkorder += 1
                     job_line += 1
-                    print checkorder
                 elif type == 'LOCATION' and checkorder == 2:
                     job_line += 1
-                    print checkorder
             if job_line >= 3:
-                joblines.append(linenum + 1)
+                joblines.append(linenum)
         else:
             msg = 'Error accessing insight API:'+str(result.status_code)+" "+str(result.content)
         linenum += 1
