@@ -30,9 +30,29 @@
   </div>
 </div>
 
+<div id="body">
+  <div id="image">
+    <br>
+    <img src="images/pic1.gif" width= '400'>
+    <img src="images/pic2.gif" width='400'>
+  </div>
+  <div id="content">
+    <br>
+    Welcome to ResumeI©, a smart alogrithm <br> designed to give you tips on improving your resumé. <br> Get started by uploading your resumé below.
+    <br><br>
+    <div style="line-height: 20px; font-size:20px;">
+      <br>
+      <form action="/upload_resume" method="post" enctype="multipart/form-data">
+        Upload resumé here: &nbsp;<input name="resume" type="file"><br><br>
+        <button>Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
 
-<br><br><br><br>
+
+<!-- <br><br><br><br>
 <form action="/upload_resume" method="post" enctype="multipart/form-data">
   Upload your resume: <br><input name="resume" type="file"><br>
   <button>Upload</button>
-</form>
+</form> -->
