@@ -55,9 +55,31 @@ a:link, a:visited {
 }
 
 .buttons:hover, a.active{
-    background-color: #74CCCC;
+    background-color: #46A3E4;
     margin: 0px;
     padding-left: 10px;
     padding-right: 10px;
     transition: .5s;
+}
+
+#body{
+  height: 100%;
+  width: 100%;
+  background-color: #46A3E4;
+  display: flex;
+  flex-direction: column;
+}
+
+#image{
+  height: 20%;
+  margin: auto;
+}
+
+#content{
+  width: 100%;
+  height: 80%;
+  text-align: center;
+  color: white;
+  font-size: 25px;
+  line-height: 40px;
 }
