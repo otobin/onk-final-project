@@ -2,10 +2,18 @@ import webapp2
 import jinja2
 import os
 import StringIO
-import logging
+import json
+import urllib
 
 from google.appengine.ext import ndb
 from google.appengine.api import users
+from google.appengine.api import urlfetch
+
+API_KEY = "AIzaSyDCv38dyT92Kalge4L8ibzHFVcLgvtps9Q"
+classify_url = "https://language.googleapis.com/v1/documents:classifyText?key=" + API_KEY
+entities_url = "https://language.googleapis.com/v1/documents:analyzeEntities?key=" + API_KEY
+sentiment_url = "https://language.googleapis.com/v1/documents:analyzeSentiment?key=" + API_KEY
+
 
 env = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
@@ -123,14 +131,16 @@ class ResumeReview(webapp2.RequestHandler):
         self.response.write(template.render())
 
 class ResumeUpload(webapp2.RequestHandler):
+    def get(self):
+        template = env.get_template("templates/resume_upload.html")
+        self.response.write(template.render())
     def post(self):
         resume = self.request.get('resume')
         current_user = users.get_current_user()
         current_profile = Profile.query().filter(Profile.email == current_user.email()).get()
         current_profile.resume = resume
-        print 'test'
         current_profile.put()
-        self.redirect('/')
+        self.redirect('/resume_advice')
 
 class ResumeHandler(webapp2.RequestHandler):
     def get(self):
@@ -162,18 +172,18 @@ class ResumeAdvice(webapp2.RequestHandler):
         self.response.write(template.render(templateVars))
 
 
-def parse_resume():
+def parse_resume(type):
     current_user = users.get_current_user()
     current_email = current_user.email()
     current_profile = Profile.query().filter(Profile.email == current_email).get()
     resume = current_profile.resume.replace('\n','').replace('\r','')
-    wordArray = resume.lower().split(' ')
+    wordArray = resume.lower().split(type)
     return wordArray
     #split resume by line, look for consistency
 
 def find_action_words():
     action_match = {}
-    words = parse_resume()
+    words = parse_resume(' ')
     action_count = 0
     print words
     for word in words:
@@ -190,7 +200,7 @@ def find_action_words():
 
 def find_dead_words():
     dead_match = {}
-    words = parse_resume()
+    words = parse_resume(' ')
     dead_count = 0
     for word in words:
         for dead_word in dead_words:
@@ -203,6 +213,23 @@ def find_dead_words():
     dead_match['count'] = dead_count
     print dead_match
     return dead_match
+
+def analyze_entities(resume):
+
+    data = {
+     "document": {
+        "type": "PLAIN_TEXT",
+        "language": "EN",
+        "content": resume,
+      },
+      "encodingType": "UTF8",
+    }
+
+    headers = {
+        "Content-Type" : "application/json; charset=utf-8"
+    }
+
+    jsondata = json.dumps(data)
 
 
 
