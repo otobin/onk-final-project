@@ -287,6 +287,10 @@ def analyze_entities():
             type_list = []
             for i in range(len(j['entities'])):
                 type_list.append(j['entities'][i]['type'])
+<<<<<<< HEAD
+=======
+            for type in type_list:          
+>>>>>>> e46080338c7be2e27213620ab88bf17a5c7b89d6
                 #print type
             for type in type_list:
                 currentindex = type_list.index(type)
