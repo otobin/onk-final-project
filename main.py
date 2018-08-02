@@ -183,7 +183,8 @@ class ResumeAdvice(webapp2.RequestHandler):
         dead_match = find_dead_words()
         print dead_match
         action_match = find_action_words()
-        job_descriptions = analyze_entities()
+        if current_person.experience != 'None':
+            job_descriptions = analyze_entities()
         categories = getCategories(classify_url)
         sentiment = getSentiment(sentiment_url)
         templateVars = {
@@ -321,7 +322,6 @@ def getCategories(url): #url is unique to categories function in api
          string += str(python_result["categories"][i]["confidence"])
          string += " level of confidence. \n"
     return string
-
 
 
 
