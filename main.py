@@ -295,7 +295,6 @@ def analyze_entities():
             type_list = []
             for i in range(len(j['entities'])):
                 type_list.append(j['entities'][i]['type'])
-
             for type in type_list:
                 currentindex = type_list.index(type)
                 if type == 'PERSON' and checkorder == 0:
