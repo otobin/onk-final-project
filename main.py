@@ -5,6 +5,7 @@ import StringIO
 import json
 import urllib
 import logging
+import time
 
 from google.appengine.ext import ndb
 from google.appengine.api import users
@@ -32,9 +33,14 @@ class Profile(ndb.Model):
     #suggested_jobs = ndb.ListProperty()
     resume = ndb.BlobProperty()
 
-dead_words = ['is', 'are', 'was', 'were', 'am', 'has', 'have', 'had', 'be', 'been', 'look', 'take', 'took', 'make', 'run', 'ran', 'go', 'went', 'gone', 'do', 'did', 'came', 'come', 'helped']
+dead_words = {
+    'is': None, 'are': None, 'was': None, 'were': None, 'am': None, 'has': None, 'have': None, 'had': None, 'be': None, 'been': None, 'look': None, 'take': None,
+    'took': None, 'run': None, 'ran': None, 'go': None, 'went': None, 'gone': None, 'do': None, 'did': None, 'came': None, 'come': None, 'helped': None
+    }
 
-action_words = ['achieved', 'improved', 'trained', 'maintained', 'mentored', 'managed', 'created', 'resolved', 'volunteered', 'influence', 'increased', 'decreased', 'ideas', 'launched', 'revenue', 'profits', 'under budget', 'won']
+action_words = {'achieved': None, 'improved': None, 'trained': None, 'maintained': None, 'mentored': None, 'managed': None, 'created': None, 'resolved': None, 'volunteered': None, 'influence': None, 'increased': None, 'decreased': None,
+    'launched': None, 'revenue': None, 'profits': None, 'under budget': None, 'won': None, 'designed': None, 'implemented': None, 'administered': None, 'resolved': None, 'monitored': None
+    }
 
 
 class MainPage(webapp2.RequestHandler):
@@ -126,22 +132,15 @@ class Update_Profile(webapp2.RequestHandler):
         key = profile.put().urlsafe()
         self.redirect('/profile?key=' + key)
 
-# class ResumeReview(webapp2.RequestHandler):
-#     def get(self):
-#         template = env.get_template("templates/resume_upload.html")
-#         self.response.write(template.render())
 
 class ResumeUpload(webapp2.RequestHandler):
     def get(self):
-        # urlsafe_key = self.request.get('key')
-        # key = ndb.Key(urlsafe=urlsafe_key)
-        # profile= key.get()
+
         current_user = users.get_current_user()
         logout_url = users.create_logout_url('/')
         current_email = current_user.email()
         current_person = Profile.query().filter(Profile.email == current_email).get()
         templateVars = {
-            # 'profile' : profile,
             'logout_url': logout_url,
             'current_person': current_person,
         }
@@ -154,6 +153,7 @@ class ResumeUpload(webapp2.RequestHandler):
         resume = self.request.get('resume')
         profile.resume = resume
         profile.put()
+        print(time.time())
         self.redirect('/resume_advice')
 
 class ResumeHandler(webapp2.RequestHandler):
@@ -200,6 +200,7 @@ class ResumeAdvice(webapp2.RequestHandler):
         }
         template = env.get_template('templates/resume_advice.html')
         self.response.write(template.render(templateVars))
+        print(time.time())
 
 
 def parse_resume(type):
@@ -218,13 +219,16 @@ def find_action_words():
     words = parse_resume(' ')
     action_count = 0
     for word in words:
-        for action_word in action_words:
-            if word == action_word and word not in action_match:
-                action_match[word] = 1
-                action_count += 1
-            elif word == action_word:
-                action_match[word] += 1
-                action_count += 1
+        if word in action_words:
+            for action_word in action_words:
+                if word == action_word and word not in action_match:
+                    action_match[word] = 1
+                    action_count += 1
+                elif word == action_word:
+                    action_match[word] += 1
+                    action_count += 1
+        else:
+            pass
     action_match['count'] = action_count
     return action_match
 
@@ -233,13 +237,16 @@ def find_dead_words():
     words = parse_resume(' ')
     dead_count = 0
     for word in words:
-        for dead_word in dead_words:
-            if word == dead_word and word not in dead_match:
-                dead_match[word] = 1
-                dead_count += 1
-            elif word == dead_word:
-                dead_match[word] += 1
-                dead_count += 1
+        if word in dead_words:
+            for dead_word in dead_words:
+                if word == dead_word and word not in dead_match:
+                    dead_match[word] = 1
+                    dead_count += 1
+                elif word == dead_word:
+                    dead_match[word] += 1
+                    dead_count += 1
+        else:
+            pass
     dead_match['count'] = dead_count
     return dead_match
 
@@ -278,14 +285,16 @@ def analyze_entities():
             for type in type_list:
                 #print type
                 if type == 'PERSON' and checkorder == 0:
-                    checkorder = 1
+                    checkorder += 1
                     job_line += 1
                     print checkorder
                 elif type == 'ORGANIZATION' or type == 'OTHER' and checkorder == 1:
-                    checkorder = 2
+                    checkorder += 1
                     job_line += 1
+                    print checkorder
                 elif type == 'LOCATION' and checkorder == 2:
                     job_line += 1
+                    print checkorder
             if job_line >= 3:
                 joblines.append(linenum + 1)
         else:
