@@ -268,7 +268,7 @@ def analyze_entities():
                 if type == 'PERSON' and currentindex > placeindex:
                     placeindex = currentindex
                     job_line += 1
-                elif type == 'ORGANIZATION' and currentindex > placeindex:
+                elif type == 'ORGANIZATION' or type == 'OTHER' and currentindex > placeindex:
                     placeindex = currentindex
                     job_line += 1
                 elif type == 'LOCATION' and currentindex > placeindex:
