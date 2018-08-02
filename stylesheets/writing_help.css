@@ -78,9 +78,9 @@ a:link, a:visited {
   height: 100%;
   weight: 100%;
   margin: auto;
-  line-height: 29px;
-  margin: 0px;
+  line-height: 35px;
+  padding-left: 20px;
   flex: 1;
-  text-align: center;
-  font-size: 18px;
+  text-align: left;
+  font-size: 22px;
 }
