@@ -189,7 +189,7 @@ class ResumeAdvice(webapp2.RequestHandler):
             'action_match' : action_match,
             'logout_url': logout_url,
             'current_person': current_person,
-            'job_description' : job_description
+            'job_descriptions' : job_descriptions
         }
         template = env.get_template('templates/resume_advice.html')
         self.response.write(template.render(templateVars))
