@@ -191,7 +191,7 @@ class ResumeAdvice(webapp2.RequestHandler):
             'action_match' : action_match,
             'logout_url': logout_url,
             'current_person': current_person,
-            'job_descriptions' : job_descriptions
+            'job_descriptions' : job_descriptions,
             'categories': categories,
             'sentiment': sentiment,
         }
