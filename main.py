@@ -185,6 +185,8 @@ class ResumeAdvice(webapp2.RequestHandler):
         action_match = find_action_words()
         if current_person.experience != 'None':
             job_descriptions = analyze_entities()
+        else:
+            job_descriptions = 0
         categories = getCategories(classify_url)
         sentiment = getSentiment(sentiment_url)
         templateVars = {
@@ -272,9 +274,13 @@ def analyze_entities():
             j = json.loads(result.content)
             type_list = []
             for i in range(len(j['entities'])):
-                type_list.append(j['entities'][i]['type'])            for type in type_list:
+                type_list.append(j['entities'][i]['type'])
+            for type in type_list:
                 #print type
                 currentindex = type_list.index(type)
+                print currentindex
+                print 'test'
+                print placeindex
                 if type == 'PERSON' and currentindex > placeindex:
                     placeindex = currentindex
                     job_line += 1
