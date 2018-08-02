@@ -33,8 +33,15 @@
 <br><br>
 
 <h3>Job Description</h3>
-{% if job_description > 0 %}
-  You correctly formatted a job description on line {{job_description}}. Good job!
+{% if job_descriptions > 0 %}
+  You correctly formatted a job description on the following line(s):
+  {% for job in job_descriptions %}
+    {{job}}
+    {% if job_descriptions.index(job) < job_descriptions|length - 1 %}
+    ,
+    {% endif %}
+  {% endfor %}
+  .  Good job!
 {% else %}
   You don't have a well-formatted job description. Check the advice page for more information.
 {% endif %}
