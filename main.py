@@ -139,15 +139,14 @@ class Update_Profile(webapp2.RequestHandler):
 
 class ResumeUpload(webapp2.RequestHandler):
     def get(self):
-        urlsafe_key = self.request.get('key')
-        key = ndb.Key(urlsafe=urlsafe_key)
-        profile=key.get()
+        # urlsafe_key = self.request.get('key')
+        # key = ndb.Key(urlsafe=urlsafe_key)
+        # profile=key.get()
         current_user = users.get_current_user()
         logout_url = users.create_logout_url('/')
         current_email = current_user.email()
         current_person = Profile.query().filter(Profile.email == current_email).get()
         templateVars = {
-            'profile' : profile,
             'logout_url': logout_url,
             'current_person': current_person,
         }
@@ -287,11 +286,6 @@ def analyze_entities():
             type_list = []
             for i in range(len(j['entities'])):
                 type_list.append(j['entities'][i]['type'])
-<<<<<<< HEAD
-=======
-            for type in type_list:          
->>>>>>> e46080338c7be2e27213620ab88bf17a5c7b89d6
-                #print type
             for type in type_list:
                 currentindex = type_list.index(type)
                 if type == 'PERSON' and currentindex > placeindex:
