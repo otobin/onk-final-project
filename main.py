@@ -190,7 +190,8 @@ class ResumeAdvice(webapp2.RequestHandler):
         dead_match = find_dead_words()
         print dead_match
         action_match = find_action_words()
-        job_descriptions = analyze_entities()
+        if current_person.experience != 'None':
+            job_descriptions = analyze_entities()
         categories = getCategories(classify_url)
         sentiment = getSentiment(sentiment_url)
         templateVars = {
@@ -280,13 +281,12 @@ def analyze_entities():
         )
 
         placeindex = -1
+        job_line = 0
         if result.status_code == 200:
             j = json.loads(result.content)
             type_list = []
             for i in range(len(j['entities'])):
-                type_list.append(j['entities'][i]['type'])
-            job_line = 0
-            for type in type_list:
+                type_list.append(j['entities'][i]['type'])            for type in type_list:
                 #print type
                 currentindex = type_list.index(type)
                 if type == 'PERSON' and currentindex > placeindex:
@@ -301,7 +301,6 @@ def analyze_entities():
                     joblines.append(linenum + 1)
         else:
             msg = 'Error accessing insight API:'+str(result.status_code)+" "+str(result.content)
-            print msg
         linenum += 1
 
         #print job_line
@@ -337,7 +336,6 @@ def getCategories(url): #url is unique to categories function in api
          string += str(python_result["categories"][i]["confidence"])
          string += " level of confidence. \n"
     return string
-
 
 
 
