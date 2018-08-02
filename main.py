@@ -176,6 +176,7 @@ class Login_Fail(webapp2.RequestHandler):
 class ResumeAdvice(webapp2.RequestHandler):
     def get(self):
         dead_match = find_dead_words()
+        print dead_match
         action_match = find_action_words()
         job_description = analyze_entities()
         templateVars = {
@@ -230,9 +231,10 @@ def find_dead_words():
 
 def analyze_entities():
     resume = parse_resume('\n')
-    print resume[0]
-    print resume[1]
-    line = 0
+    linenum = 0
+
+    # for line in resume:
+    #     print line
 
     for resume_line in resume:
         data = {
@@ -256,10 +258,12 @@ def analyze_entities():
 
         placeindex = -1
         job_line = 0
+        print 'test'
         if result.status_code == 200:
             j = json.loads(result.content)
             type_list = []
             for i in range(len(j['entities'])):
+                print j['entities']
                 type_list.append(j['entities'][i]['type'])
                 print j['entities'][i]['type']
             for type in type_list:
@@ -274,18 +278,17 @@ def analyze_entities():
                 elif type == 'LOCATION' and currentindex > placeindex:
                     placeindex = currentindex
                     job_line += 1
+                    jobline = linenum
         else:
             msg = 'Error accessing insight API:'+str(result.status_code)+" "+str(result.content)
             print msg
-        line += 1
+        linenum += 1
 
-        print job_line
-        if job_line >= 3:
-            return True
-        else:
-            return False
-
-analyze_entities()
+        #print job_line
+    if job_line >= 3:
+        return jobline
+    else:
+        return 0
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
