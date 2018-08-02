@@ -292,6 +292,60 @@ def analyze_entities():
     else:
         return 0
 
+
+def getCategories(url): #url is unique to categories function in api
+    data = {
+     "document": {
+        "type": "PLAIN_TEXT",
+        "language": "EN",
+        "content": "Google, headquartered in Mountain View, unveiled the new Android phone at the Consumer Electronic Show. Sundar Pichai said in his keynote that users love their new Android phones."
+      }
+    }
+    headers = {
+    "Content-Type" : "application/json; charset=utf-8"
+    }
+    jsondata = json.dumps(data)
+    result = urlfetch.fetch(url, method=urlfetch.POST, payload=data,headers=headers)
+    python_result = json.loads(result.content)
+    string = ""
+    for i in range(0, len(python_result["categories"])):
+         string += "Your resume indicates the "
+         string += python_result["categories"][i]["name"]
+         string += " category with a "
+         string += str(python_result["categories"][i]["confidence"])
+         string += " level of confidence. \n"
+    return string
+print(getCategories(url))
+
+
+
+
+def getSentiment(url): #url is unique to sentiment function in api
+    data = {
+        "document": {
+        "type": "PLAIN_TEXT",
+        "language": "EN",
+        "content": "Google, headquartered in Mountain View, unveiled the new Android phone at the Consumer Electronic Show. Sundar Pichai said in his keynote that users love their new Android phones."
+      },
+      "encodingType": "UTF32",
+    }
+    headers = {
+    "Content-Type" : "application/json; charset=utf-8"
+        }
+    jsondata = json.dumps(data)
+    result = urlfetch.fetch(url, method=urlfetch.POST, payload=data,headers=headers)
+    python_result = json.loads(result.content)
+    string = ""
+    magnitude = python_result["documentSentiment"]["magnitude"]
+    score = python_result["documentSentiment"]["score"]
+    if (score < 0.0):
+        string = "Your resume has a " + str(score) + " score  and a " + str(magnitude) + " magnitude. This reads as negative"
+    elif (score > 0.0 and score < .5):
+        string = "Your resume has a " + str(score) + " score  and a " + str(magnitude) + " magnitude. This reads as neutral"
+    elif (score > .5):
+        string = "Your resume has a " + str(score) + " score  and a " + str(magnitude) + " magnitude. This reads as positive"
+    return string
+
 app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/create', CreateProfile),
