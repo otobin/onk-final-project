@@ -24,8 +24,8 @@ body{
   padding: 0;
   text-align: right;
   float: right;
-  width: 100%;
-  padding-right: 10px;
+  width: auto;
+  padding-right: 0;
 }
 
 #title{
@@ -59,7 +59,7 @@ body{
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  background-color: #f3e8cb;
+  background-color: #fd5f00;
 
 }
 

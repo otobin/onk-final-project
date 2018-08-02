@@ -61,3 +61,20 @@ a:link, a:visited {
     padding-right: 10px;
     transition: .5s;
 }
+
+#body{
+  background-color: #46A3E4;
+  margin: 0px;
+  color: white;
+  height: 100%;
+  weight: 100%;
+  padding: 40px;
+  font-size: 20px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+.content{
+  height: 100%;
+  weight: 100%;
+}

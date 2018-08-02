@@ -26,73 +26,71 @@
     <a href="/upload_resume?key={{current_person.key.urlsafe()}}">Resume Review</a>
   </div>
   <div class="buttons">
+    <a href="/tips?key={{current_person.key.urlsafe()}}">Resume Tips</a>
+  </div>
+  <div class="buttons">
     <a href="{{logout_url}}">Log out</a>
   </div>
 </div>
 
 <div id="body">
   <div id="content">
-    <div id="results">
-    </div>
+    <div style="font-size: 20px"><strong>Action Words:</strong></div>
+    {% for word in action_match %}
+      {% if word != 'count' %}
+        You used '{{word}}' {{action_match[word]}} times <br>
+      {% endif %}
+    {% endfor %}
+
+    {% if action_match['count'] < 3 %}
+      You didn't use very many action words. You should try to add more.
+    {% elif action_match['count'] < 5 %}
+      You used some action words, but you can always add more!
+    {% else %}
+      Good job! You used action words well.
+    {% endif %}
+
+    <br><br>
+
+    <div style="font-size: 20px"><strong>Dead Words:</strong></div>
+    {% for word in dead_match %}
+      {% if word != 'count' %}
+        You used '{{word}}' {{dead_match[word]}} times <br>
+      {% endif %}
+    {% endfor %}
+
+    {% if dead_match['count'] < 3 %}
+      You avoided using many dead words. Good job!
+    {% elif dead_match['count'] < 5 %}
+      You used some dead words.  Try to use more specific words.
+    {% else %}
+      You used a lot of dead words. Refer to the list of key words on the advice page.
+    {% endif %}
+
+    <br><br>
+
+    <div style="font-size: 20px"><strong>Job Description</strong></div>
+    {% if job_descriptions > 0 %}
+      You correctly formatted a job description on the following line(s):
+      {% for job in job_descriptions %}
+        {{job}}
+        {% if job_descriptions.index(job) < job_descriptions|length - 1 %}
+        ,
+        {% endif %}
+      {% endfor %}
+      .  Good job!
+    {% else %}
+      You don't have a well-formatted job description. Check the advice page for more information.
+    {% endif %}
+
+
+
   </div>
   <div id="picture">
-    <br><br><br><img src="images/time.jpg" width="500">
+    <br><img style="margin-left: 60px" src="images/time.jpg" width="400"><br>
+    <div style="font-size: 20px"><Strong>Sentiment:</Strong></div>
+    {{sentiment}}.<br><br>
+    <div style="font-size: 20px"><Strong>Categories:</Strong></div>
+    {{categories}}
   </div>
 </div>
-
-
-<h3>Action Words:</h3> <br>
-{% for word in action_match %}
-  {% if word != 'count' %}
-    You used '{{word}}' {{action_match[word]}} times <br>
-  {% endif %}
-{% endfor %}
-
-{% if action_match['count'] < 3 %}
-  You didn't use very many action words. You should try to add more.
-{% elif action_match['count'] < 5 %}
-  You used some action words, but you can always add more!
-{% else %}
-  Good job! You used action words well.
-{% endif %}
-
-<br><br>
-
-<h3>Dead Words:</h3>
-{% for word in dead_match %}
-  {% if word != 'count' %}
-    You used '{{word}}' {{dead_match[word]}} times <br>
-  {% endif %}
-{% endfor %}
-
-{% if dead_match['count'] < 3 %}
-  You avoided using many dead words. Good job!
-{% elif dead_match['count'] < 5 %}
-  You used some dead words.  Try to use more specific words.
-{% else %}
-  You used a lot of dead words. Refer to the list of key words on the advice page.
-{% endif %}
-
-<br><br>
-
-<h3>Job Description</h3>
-{% if job_descriptions > 0 %}
-  You correctly formatted a job description on the following line(s):
-  {% for job in job_descriptions %}
-    {{job}}
-    {% if job_descriptions.index(job) < job_descriptions|length - 1 %}
-    ,
-    {% endif %}
-  {% endfor %}
-  .  Good job!
-{% else %}
-  You don't have a well-formatted job description. Check the advice page for more information.
-{% endif %}
-
-
-
-<h3>Categories</h3>
-{{categories}}
-
-<h3>Sentiment</h3>
-{{sentiment}}
