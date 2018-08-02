@@ -1,3 +1,36 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="/stylesheets/upload_resume.css"/>
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=Playfair+Display" rel="stylesheet">
+<title>Resume Advice</title>
+
+<div id="title">
+  <div id="work">
+    <h1>
+      WorkForce®
+    </h1>
+  </div>
+  <div id="goldman">
+    <img src="/images/goldman.jpg" width="200px">
+  </div>
+</div>
+
+<div class="panel">
+  <div class="buttons">
+    <a href="/">Home</a>
+  </div>
+  <div class="buttons">
+    <a href="/profile?key={{current_person.key.urlsafe()}}">Profile</a>
+  </div>
+  <div class="buttons">
+    <a href="/upload_resume?key={{current_person.key.urlsafe()}}">Resume Review</a>
+  </div>
+  <div class="buttons">
+    <a href="{{logout_url}}">Log out</a>
+  </div>
+</div>
+
+
 <h3>Action Words:</h3> <br>
 {% for word in action_match %}
   {% if word != 'count' %}
@@ -19,7 +52,7 @@
 {% for word in dead_match %}
   {% if word != 'count' %}
     You used '{{word}}' {{dead_match[word]}} times <br>
-  {% endif %} 
+  {% endif %}
 {% endfor %}
 
 {% if dead_match['count'] < 3 %}

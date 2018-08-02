@@ -139,11 +139,12 @@ class ResumeUpload(webapp2.RequestHandler):
         template = env.get_template("templates/resume_upload.html")
         self.response.write(template.render(templateVars))
     def post(self):
-        resume = self.request.get('resume')
         current_user = users.get_current_user()
-        current_profile = Profile.query().filter(Profile.email == current_user.email()).get()
-        current_profile.resume = resume
-        current_profile.put()
+        current_email = current_user.email()
+        profile = Profile.query().filter(Profile.email == current_email).get()
+        resume = self.request.get('resume')
+        profile.resume = resume
+        profile.put()
         self.redirect('/resume_advice')
 
 class ResumeHandler(webapp2.RequestHandler):
@@ -166,11 +167,17 @@ class Login_Fail(webapp2.RequestHandler):
 
 class ResumeAdvice(webapp2.RequestHandler):
     def get(self):
+        current_user = users.get_current_user()
+        logout_url = users.create_logout_url('/')
+        current_email = current_user.email()
+        current_person = Profile.query().filter(Profile.email == current_email).get()
         dead_match = find_dead_words()
         action_match = find_action_words()
         templateVars = {
             'dead_match' : dead_match,
-            'action_match' : action_match
+            'action_match' : action_match,
+            'logout_url': logout_url,
+            'current_person': current_person,
         }
         template = env.get_template('templates/resume_advice.html')
         self.response.write(template.render(templateVars))

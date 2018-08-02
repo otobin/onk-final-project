@@ -1,0 +1,63 @@
+body, html{
+  height: 100%;
+  width: 100%;
+}
+
+body{
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+}
+
+#title{
+  background-color: #64ACFC;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+#goldman{
+  margin: 0;
+  padding: 0;
+  text-align: right;
+  float: right;
+  width: 100%;
+  padding-right: 10px;
+}
+
+#work{
+  color: white;
+  padding-left: 40px;
+  text-align: left;
+  float: left;
+  width: 100%;
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+
+.panel{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  background-color: #98C6F4;
+  padding: 0px;
+  margin: 0px;
+  line-height: 45px;
+  height: 45px;
+}
+
+a:link, a:visited {
+    color: black;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.buttons:hover, a.active{
+    background-color: #46A3E4;
+    margin: 0px;
+    padding-left: 10px;
+    padding-right: 10px;
+    transition: .5s;
+}
