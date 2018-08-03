@@ -345,13 +345,16 @@ def getCategories(url): #url is unique to categories function in api
     result = urlfetch.fetch(url, method=urlfetch.POST, payload=data,headers=headers)
     python_result = json.loads(result.content)
     string = ""
-    for i in range(0, len(python_result["categories"])):
-         string += "Your resume indicates the "
-         string += python_result["categories"][i]["name"]
-         string += " category with a "
-         string += str(python_result["categories"][i]["confidence"])
-         string += " level of confidence. \n"
-    return string
+    if 'categories' in python_result:
+        for i in range(0, len(python_result["categories"])):
+             string += "Your resume indicates the "
+             string += python_result["categories"][i]["name"]
+             string += " category with a "
+             string += str(python_result["categories"][i]["confidence"])
+             string += " level of confidence. \n"
+        return string
+    else:
+        return 'Not enough data'
 
 
 
@@ -376,15 +379,18 @@ def getSentiment(url): #url is unique to sentiment function in api
     result = urlfetch.fetch(url, method=urlfetch.POST, payload=data,headers=headers)
     python_result = json.loads(result.content)
     string = ""
-    magnitude = python_result["documentSentiment"]["magnitude"]
-    score = python_result["documentSentiment"]["score"]
-    if (score < 0.0):
-        string = "Your resume has a score of " + str(score) + " out of 1  and a magnitude of " + str(magnitude) + ", which measures the strengh of emotion. This reads as negative"
-    elif (score > 0.0 and score < .5):
-        string = "Your resume has a score of " + str(score) + " out of 1  and a magnitude of " + str(magnitude) + ", which measures the strengh of emotion. This reads as neutral"
-    elif (score > .5):
-        string = "Your resume has a score of " + str(score) + " out of 1 and a magnitude of " + str(magnitude) + ", which measures the strengh of emotion. This reads as positive"
-    return string
+    if 'documentSentiment' in python_result:
+        magnitude = python_result["documentSentiment"]["magnitude"]
+        score = python_result["documentSentiment"]["score"]
+        if (score < 0.0):
+            string = "Your resume has a score of " + str(score) + " out of 1  and a magnitude of " + str(magnitude) + ", which measures the strengh of emotion. This reads as negative"
+        elif (score > 0.0 and score < .5):
+            string = "Your resume has a score of " + str(score) + " out of 1  and a magnitude of " + str(magnitude) + ", which measures the strengh of emotion. This reads as neutral"
+        elif (score > .5):
+            string = "Your resume has a score of " + str(score) + " out of 1 and a magnitude of " + str(magnitude) + ", which measures the strengh of emotion. This reads as positive"
+        return string
+    else:
+        return 'Not enough data'
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),
