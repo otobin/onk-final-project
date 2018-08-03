@@ -157,7 +157,7 @@ class ResumeUpload(webapp2.RequestHandler):
         resume = self.request.get('resume')
         profile.resume = resume
         profile.put()
-        print(time.time())
+        #print(time.time())
         self.redirect('/resume_advice')
 
 class ResumeHandler(webapp2.RequestHandler):
@@ -199,7 +199,6 @@ class ResumeAdvice(webapp2.RequestHandler):
         current_email = current_user.email()
         current_person = Profile.query().filter(Profile.email == current_email).get()
         dead_match = find_dead_words()
-        print dead_match
         action_match = find_action_words()
         if current_person.experience != 'None':
             job_descriptions = analyze_entities()
@@ -218,7 +217,7 @@ class ResumeAdvice(webapp2.RequestHandler):
         }
         template = env.get_template('templates/resume_advice.html')
         self.response.write(template.render(templateVars))
-        print(time.time())
+        #print(time.time())
 
 
 def parse_resume(type):
@@ -292,7 +291,7 @@ def analyze_entities():
 
         result = urlfetch.fetch(entities_url,
              method=urlfetch.POST,
-             payload=data,
+             payload=json.dumps(data),
              headers=headers
         )
 
@@ -300,11 +299,13 @@ def analyze_entities():
         job_line = 0
         if result.status_code == 200:
             j = json.loads(result.content)
-            print j
             type_list = []
             for i in range(len(j['entities'])):
                 type_list.append(j['entities'][i]['type'])
+            print 'This is the type list: ' + type_list
             for type in type_list:
+                print 'Type is: ' + type
+                print 'check_order is: ' + str(checkorder)
                 if type == 'PERSON' and checkorder == 0:
                     checkorder += 1
                     job_line += 1
@@ -339,19 +340,23 @@ def getCategories(url): #url is unique to categories function in api
       }
     }
     headers = {
-    "Content-Type" : "application/json; charset=utf-8"
+        "Content-Type" : "application/json; charset=utf-8"
     }
     jsondata = json.dumps(data)
-    result = urlfetch.fetch(url, method=urlfetch.POST, payload=data,headers=headers)
+    result = urlfetch.fetch(url, method=urlfetch.POST, payload=json.dumps(data), headers=headers)
     python_result = json.loads(result.content)
     string = ""
-    for i in range(0, len(python_result["categories"])):
-         string += "Your resume indicates the "
-         string += python_result["categories"][i]["name"]
-         string += " category with a "
-         string += str(python_result["categories"][i]["confidence"])
-         string += " level of confidence. \n"
-    return string
+    print "classifyContent output: " + str(python_result)
+    if 'categories' in python_result:
+        for i in range(0, len(python_result["categories"])):
+             string += "Your resume indicates the "
+             string += python_result["categories"][i]["name"]
+             string += " category with a "
+             string += str(python_result["categories"][i]["confidence"])
+             string += " level of confidence. \n"
+        return string
+        else:
+             return 'None'
 
 
 
@@ -373,18 +378,24 @@ def getSentiment(url): #url is unique to sentiment function in api
     "Content-Type" : "application/json; charset=utf-8"
         }
     jsondata = json.dumps(data)
-    result = urlfetch.fetch(url, method=urlfetch.POST, payload=data,headers=headers)
+    result = urlfetch.fetch(url, method=urlfetch.POST, payload=json.dumps(data),  headers=headers)
+
     python_result = json.loads(result.content)
     string = ""
-    magnitude = python_result["documentSentiment"]["magnitude"]
-    score = python_result["documentSentiment"]["score"]
-    if (score < 0.0):
-        string = "Your resume has a score of " + str(score) + " out of 1  and a magnitude of " + str(magnitude) + ", which measures the strengh of emotion. This reads as negative"
-    elif (score > 0.0 and score < .5):
-        string = "Your resume has a score of " + str(score) + " out of 1  and a magnitude of " + str(magnitude) + ", which measures the strengh of emotion. This reads as neutral"
-    elif (score > .5):
-        string = "Your resume has a score of " + str(score) + " out of 1 and a magnitude of " + str(magnitude) + ", which measures the strengh of emotion. This reads as positive"
-    return string
+
+    if 'documentSentiment' in python_result:
+        magnitude = python_result["documentSentiment"]["magnitude"]
+        score = python_result["documentSentiment"]["score"]
+        # print 'Sentiment magnitude is: ' + str(magnitude) + 'Sentiment score is: ' + str(score)
+        if (score <= 0.0):
+            string = "Your resume has a score of " + str(score) + " out of 1  and a magnitude of " + str(magnitude) + ", which measures the strengh of emotion. This reads as negative"
+        elif (score < .5):
+            string = "Your resume has a score of " + str(score) + " out of 1  and a magnitude of " + str(magnitude) + ", which measures the strengh of emotion. This reads as neutral"
+        else:
+            string = "Your resume has a score of " + str(score) + " out of 1 and a magnitude of " + str(magnitude) + ", which measures the strengh of emotion. This reads as positive"
+        return string
+    else:
+        return 'None'
 
 app = webapp2.WSGIApplication([
     ('/', MainPage),

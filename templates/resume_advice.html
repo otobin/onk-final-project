@@ -78,9 +78,10 @@
     {% if job_descriptions > 0 %}
       You correctly formatted a job description on the following line(s):
       {% for job in job_descriptions %}
-        {{job}}
         {% if job_descriptions.index(job) < job_descriptions|length - 1 %}
-        ,
+        {{job}},
+        {% else %}
+        {{job}}
         {% endif %}
       {% endfor %}
       .  Good job!
