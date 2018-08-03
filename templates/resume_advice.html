@@ -98,6 +98,7 @@
 <!-- <div id="body">
   <div id="content">
     <div style="font-size: 20px"><strong>Action Words:</strong></div>
+    <div style="font-size: 18px">
     {% for word in action_match %}
       {% if word != 'count' %}
         You used '{{word}}' {{action_match[word]}} times <br>
@@ -111,10 +112,12 @@
     {% else %}
       Good job! You used action words well.
     {% endif %}
+    </div>
 
     <br><br>
 
     <div style="font-size: 20px"><strong>Dead Words:</strong></div>
+    <div style="font-size: 18px">
     {% for word in dead_match %}
       {% if word != 'count' %}
         You used '{{word}}' {{dead_match[word]}} times <br>
@@ -128,31 +131,34 @@
     {% else %}
       You used a lot of dead words. Refer to the list of key words on the advice page.
     {% endif %}
+    </div>
 
     <br><br>
 
     <div style="font-size: 20px"><strong>Job Description</strong></div>
+    <div style="font-size: 18px">
     {% if job_descriptions > 0 %}
       You correctly formatted a job description on the following line(s):
       {% for job in job_descriptions %}
-        {{job}}
         {% if job_descriptions.index(job) < job_descriptions|length - 1 %}
-        ,
+        {{job}},
+        {% else %}
+        {{job}}
         {% endif %}
       {% endfor %}
       .  Good job!
     {% else %}
       You don't have a well-formatted job description. Check the advice page for more information.
     {% endif %}
-
+    </div>
 
 
   </div>
   <div id="picture">
     <br><img style="margin-left: 60px" src="images/time.jpg" width="400"><br>
     <div style="font-size: 20px"><Strong>Sentiment:</Strong></div>
-    {{sentiment}}.<br><br>
+      <div style="font-size: 18px">{{sentiment}}.</div><br><br>
     <div style="font-size: 20px"><Strong>Categories:</Strong></div>
-    {{categories}}
+      <div style="font-size: 18px">{{categories}}</div>
   </div>
 </div> -->

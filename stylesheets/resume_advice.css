@@ -75,14 +75,17 @@ a:link, a:visited {
 
 #picture{
   flex: 1;
+  margin-left: 340px;
 }
 
 #text{
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  flex: 4;
 }
 
 .content{
-    flex: 1;
+  flex: 1;
+  margin: 20px;
 }

@@ -157,7 +157,7 @@ class ResumeUpload(webapp2.RequestHandler):
         resume = self.request.get('resume')
         profile.resume = resume
         profile.put()
-        print(time.time())
+        #print(time.time())
         self.redirect('/resume_advice')
 
 class ResumeHandler(webapp2.RequestHandler):
@@ -199,7 +199,6 @@ class ResumeAdvice(webapp2.RequestHandler):
         current_email = current_user.email()
         current_person = Profile.query().filter(Profile.email == current_email).get()
         dead_match = find_dead_words()
-        print dead_match
         action_match = find_action_words()
         if current_person.experience != 'None':
             job_descriptions = analyze_entities()
@@ -218,7 +217,7 @@ class ResumeAdvice(webapp2.RequestHandler):
         }
         template = env.get_template('templates/resume_advice.html')
         self.response.write(template.render(templateVars))
-        print(time.time())
+        #print(time.time())
 
 
 def parse_resume(type):
@@ -228,7 +227,10 @@ def parse_resume(type):
     resume = current_profile.resume
     if type is ' ' :
         resume = resume.replace('\n','').replace('\r','').lower()
-    wordArray = resume.split(type)
+        wordArray = resume.split(type)
+    else:
+        #resume = resume.replace('\r', '\n')
+        wordArray = resume.split(type)
     return wordArray
     #split resume by line, look for consistency
 
@@ -270,7 +272,7 @@ def find_dead_words():
 
 def analyze_entities():
     resume = parse_resume('\n')
-    linenum = 0
+    linenum = 1
     joblines = []
 
     for resume_line in resume:
@@ -289,7 +291,7 @@ def analyze_entities():
 
         result = urlfetch.fetch(entities_url,
              method=urlfetch.POST,
-             payload=data,
+             payload=json.dumps(data),
              headers=headers
         )
 
@@ -300,21 +302,20 @@ def analyze_entities():
             type_list = []
             for i in range(len(j['entities'])):
                 type_list.append(j['entities'][i]['type'])
+            print 'This is the type list: ' + type_list
             for type in type_list:
-                currentindex = type_list.index(type)
+                print 'Type is: ' + type
+                print 'check_order is: ' + str(checkorder)
                 if type == 'PERSON' and checkorder == 0:
                     checkorder += 1
                     job_line += 1
-                    print checkorder
                 elif type == 'ORGANIZATION' or type == 'OTHER' and checkorder == 1:
                     checkorder += 1
                     job_line += 1
-                    print checkorder
                 elif type == 'LOCATION' and checkorder == 2:
                     job_line += 1
-                    print checkorder
             if job_line >= 3:
-                joblines.append(linenum + 1)
+                joblines.append(linenum)
         else:
             msg = 'Error accessing insight API:'+str(result.status_code)+" "+str(result.content)
         linenum += 1
@@ -339,10 +340,10 @@ def getCategories(url): #url is unique to categories function in api
       }
     }
     headers = {
-    "Content-Type" : "application/json; charset=utf-8"
+        "Content-Type" : "application/json; charset=utf-8"
     }
     jsondata = json.dumps(data)
-    result = urlfetch.fetch(url, method=urlfetch.POST, payload=data,headers=headers)
+    result = urlfetch.fetch(url, method=urlfetch.POST, payload=json.dumps(data), headers=headers)
     python_result = json.loads(result.content)
     string = ""
     if 'categories' in python_result:
@@ -376,7 +377,8 @@ def getSentiment(url): #url is unique to sentiment function in api
     "Content-Type" : "application/json; charset=utf-8"
         }
     jsondata = json.dumps(data)
-    result = urlfetch.fetch(url, method=urlfetch.POST, payload=data,headers=headers)
+    result = urlfetch.fetch(url, method=urlfetch.POST, payload=json.dumps(data),  headers=headers)
+
     python_result = json.loads(result.content)
     string = ""
     if 'documentSentiment' in python_result:
@@ -384,9 +386,9 @@ def getSentiment(url): #url is unique to sentiment function in api
         score = python_result["documentSentiment"]["score"]
         if (score < 0.0):
             string = "Your resume has a score of " + str(score) + " out of 1  and a magnitude of " + str(magnitude) + ", which measures the strengh of emotion. This reads as negative"
-        elif (score > 0.0 and score < .5):
+        elif (score <= .5):
             string = "Your resume has a score of " + str(score) + " out of 1  and a magnitude of " + str(magnitude) + ", which measures the strengh of emotion. This reads as neutral"
-        elif (score > .5):
+        else:
             string = "Your resume has a score of " + str(score) + " out of 1 and a magnitude of " + str(magnitude) + ", which measures the strengh of emotion. This reads as positive"
         return string
     else:
