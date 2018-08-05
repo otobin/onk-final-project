@@ -11,7 +11,7 @@ from google.appengine.ext import ndb
 from google.appengine.api import users
 from google.appengine.api import urlfetch
 
-API_KEY = "AIzaSyDCv38dyT92Kalge4L8ibzHFVcLgvtps9Q"
+API_KEY = "AIzaSyAAJVm5_VGMef71NmctVuM9H0ShUoAEq3o"
 classify_url = "https://language.googleapis.com/v1/documents:classifyText?key=" + API_KEY
 entities_url = "https://language.googleapis.com/v1/documents:analyzeEntities?key=" + API_KEY
 sentiment_url = "https://language.googleapis.com/v1/documents:analyzeSentiment?key=" + API_KEY
@@ -302,7 +302,7 @@ def analyze_entities():
             type_list = []
             for i in range(len(j['entities'])):
                 type_list.append(j['entities'][i]['type'])
-            print 'This is the type list: ' + type_list
+            #print 'This is the type list: ' + type_list
             for type in type_list:
                 print 'Type is: ' + type
                 print 'check_order is: ' + str(checkorder)
@@ -344,7 +344,9 @@ def getCategories(url): #url is unique to categories function in api
     }
     jsondata = json.dumps(data)
     result = urlfetch.fetch(url, method=urlfetch.POST, payload=json.dumps(data), headers=headers)
+    print result
     python_result = json.loads(result.content)
+    print python_result
     string = ""
     if 'categories' in python_result:
         for i in range(0, len(python_result["categories"])):
